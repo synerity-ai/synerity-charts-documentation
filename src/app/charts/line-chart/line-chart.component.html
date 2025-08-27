@@ -167,16 +167,16 @@
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-neutral-200">
-              <tr *ngFor="let item of config.data; let i = index" class="hover:bg-neutral-50">
+              <tr *ngFor="let item of getChartData(); let i = index" class="hover:bg-neutral-50">
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-neutral-900">{{ item.label }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-600">{{ item.value | number }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm">
                   <span *ngIf="i > 0" [ngClass]="{
-                    'text-green-600': item.value > config.data[i-1].value,
-                    'text-red-600': item.value < config.data[i-1].value,
-                    'text-neutral-600': item.value === config.data[i-1].value
+                    'text-green-600': item.value > getChartData()[i-1].value,
+                    'text-red-600': item.value < getChartData()[i-1].value,
+                    'text-neutral-600': item.value === getChartData()[i-1].value
                   }">
-                    {{ item.value > config.data[i-1].value ? '+' : '' }}{{ (item.value - config.data[i-1].value) | number:'1.0-1' }}
+                    {{ item.value > getChartData()[i-1].value ? '+' : '' }}{{ (item.value - getChartData()[i-1].value) | number:'1.0-1' }}
                   </span>
                   <span *ngIf="i === 0" class="text-neutral-400">-</span>
                 </td>

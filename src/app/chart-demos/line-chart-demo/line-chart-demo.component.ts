@@ -32,7 +32,9 @@ export class LineChartDemoComponent implements OnInit, OnDestroy {
     showPoints: true,
     showGrid: true,
     curveType: 'monotoneX',
-    strokeWidth: 2
+    strokeWidth: 2,
+    showLegend: true,
+    multiLine: false
   };
 
   // Customization Options
@@ -44,7 +46,9 @@ export class LineChartDemoComponent implements OnInit, OnDestroy {
     showGrid: true,
     curveType: 'monotoneX',
     strokeWidth: 2,
-    colorScheme: 'default'
+    colorScheme: 'default',
+    showLegend: true,
+    multiLine: false
   };
 
   // Color Schemes
@@ -91,7 +95,48 @@ export class LineChartDemoComponent implements OnInit, OnDestroy {
       { label: 'Fri', value: 28, color: '#8B5CF6' },
       { label: 'Sat', value: 25, color: '#06B6D4' },
       { label: 'Sun', value: 23, color: '#EC4899' }
-    ]
+    ],
+    multiLine: {
+      series: [
+        {
+          name: 'Revenue',
+          data: [
+            { label: 'Jan', value: 45000 },
+            { label: 'Feb', value: 52000 },
+            { label: 'Mar', value: 48000 },
+            { label: 'Apr', value: 61000 },
+            { label: 'May', value: 55000 },
+            { label: 'Jun', value: 67000 }
+          ],
+          color: '#3B82F6'
+        },
+        {
+          name: 'Profit',
+          data: [
+            { label: 'Jan', value: 12000 },
+            { label: 'Feb', value: 15000 },
+            { label: 'Mar', value: 14000 },
+            { label: 'Apr', value: 18000 },
+            { label: 'May', value: 16000 },
+            { label: 'Jun', value: 20000 }
+          ],
+          color: '#10B981'
+        },
+        {
+          name: 'Expenses',
+          data: [
+            { label: 'Jan', value: 33000 },
+            { label: 'Feb', value: 37000 },
+            { label: 'Mar', value: 34000 },
+            { label: 'Apr', value: 43000 },
+            { label: 'May', value: 39000 },
+            { label: 'Jun', value: 47000 }
+          ],
+          color: '#F59E0B'
+        }
+      ],
+      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+    }
   };
 
   currentDataSet = 'revenue';
@@ -112,14 +157,22 @@ export class LineChartDemoComponent implements OnInit, OnDestroy {
     const selectedData = this.sampleDataSets[this.currentDataSet as keyof typeof this.sampleDataSets];
     const colorScheme = this.colorSchemes[this.customizationOptions.colorScheme as keyof typeof this.colorSchemes];
     
-    this.lineChartConfig = { ...this.lineChartConfig, data: selectedData.map((item, index) => ({
-      ...item,
-      color: colorScheme[index % colorScheme.length]
-    }))};
+    if (Array.isArray(selectedData)) {
+      this.lineChartConfig = { ...this.lineChartConfig, data: selectedData.map((item: any, index: number) => ({
+        ...item,
+        color: colorScheme[index % colorScheme.length]
+      }))};
+    }
   }
 
   updateCurrentChartData() {
-    this.currentChartData = [...this.lineChartConfig.data];
+    if (Array.isArray(this.lineChartConfig.data)) {
+      this.currentChartData = [...this.lineChartConfig.data];
+    } else {
+      // For multi-line data, use the first series
+      const multiData = this.lineChartConfig.data as any;
+      this.currentChartData = multiData.series.length > 0 ? [...multiData.series[0].data] : [];
+    }
   }
 
   // Customization Methods
@@ -195,6 +248,35 @@ export class LineChartDemoComponent implements OnInit, OnDestroy {
     
     if (this.lineChartComponent) {
       this.lineChartComponent.updateChartOptions({ strokeWidth: value });
+    } else {
+      this.triggerChartUpdate();
+    }
+  }
+
+  toggleMultiLine() {
+    this.customizationOptions.multiLine = !this.customizationOptions.multiLine;
+    this.lineChartConfig = { ...this.lineChartConfig, multiLine: this.customizationOptions.multiLine };
+    
+    // Update data based on multi-line mode
+    if (this.customizationOptions.multiLine) {
+      this.lineChartConfig = { ...this.lineChartConfig, data: this.sampleDataSets.multiLine };
+    } else {
+      this.updateChartData();
+    }
+    
+    if (this.lineChartComponent) {
+      this.lineChartComponent.updateChartOptions({ multiLine: this.customizationOptions.multiLine });
+    } else {
+      this.triggerChartUpdate();
+    }
+  }
+
+  toggleLegend() {
+    this.customizationOptions.showLegend = !this.customizationOptions.showLegend;
+    this.lineChartConfig = { ...this.lineChartConfig, showLegend: this.customizationOptions.showLegend };
+    
+    if (this.lineChartComponent) {
+      this.lineChartComponent.updateChartOptions({ showLegend: this.customizationOptions.showLegend });
     } else {
       this.triggerChartUpdate();
     }

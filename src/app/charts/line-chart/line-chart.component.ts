@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewInit, Input, Output, EventEmitter, ChangeDetectorRef, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LineChart, ChartData } from '@synerity/charts';
+import { LineChart, ChartData, MultiLineChartData } from '@synerity/charts';
 
 export interface LineChartConfig {
-  data: ChartData[];
+  data: ChartData[] | MultiLineChartData;
   width?: number;
   height?: number;
   animate?: boolean;
@@ -11,6 +11,9 @@ export interface LineChartConfig {
   showGrid?: boolean;
   curveType?: 'linear' | 'monotoneX' | 'step' | 'stepAfter' | 'stepBefore' | 'basis' | 'cardinal' | 'catmullRom';
   strokeWidth?: number;
+  showLegend?: boolean;
+  legendPosition?: 'top' | 'bottom' | 'left' | 'right';
+  multiLine?: boolean;
 }
 
 @Component({
@@ -130,7 +133,8 @@ export class LineChartComponent implements OnInit, OnDestroy, AfterViewInit, OnC
         return;
       }
 
-      if (!this.config.data || this.config.data.length === 0) {
+      const data = this.getChartData();
+      if (!data || data.length === 0) {
         this.error = 'No data available for chart';
         this.isLoading = false;
         this.cdr.detectChanges();
@@ -142,7 +146,7 @@ export class LineChartComponent implements OnInit, OnDestroy, AfterViewInit, OnC
 
       this.chart = new LineChart({
         container: this.chartContainer.nativeElement,
-        data: [...this.config.data],
+        data: this.config.data,
         options: {
           width: this.config.width || 500,
           height: this.config.height || 300,
@@ -150,7 +154,9 @@ export class LineChartComponent implements OnInit, OnDestroy, AfterViewInit, OnC
           showPoints: this.config.showPoints ?? true,
           showGrid: this.config.showGrid ?? true,
           curveType: this.config.curveType || 'monotoneX',
-          strokeWidth: this.config.strokeWidth || 2
+          strokeWidth: this.config.strokeWidth || 2,
+          showLegend: this.config.showLegend ?? false,
+          multiLine: this.config.multiLine ?? false
         }
       });
 
@@ -204,31 +210,64 @@ export class LineChartComponent implements OnInit, OnDestroy, AfterViewInit, OnC
   }
 
   public getChartData(): ChartData[] {
-    return this.config.data;
+    if (Array.isArray(this.config.data)) {
+      return this.config.data;
+    } else {
+      // For multi-line data, return the first series data
+      const multiData = this.config.data as MultiLineChartData;
+      return multiData.series.length > 0 ? multiData.series[0].data : [];
+    }
   }
 
   public getTotalValue(): number {
-    return this.config.data.reduce((sum, item) => sum + item.value, 0);
+    if (Array.isArray(this.config.data)) {
+      return this.config.data.reduce((sum: number, item: any) => sum + item.value, 0);
+    } else {
+      // Multi-line data
+      const multiData = this.config.data as MultiLineChartData;
+      return multiData.series.reduce((sum: number, series: any) => 
+        sum + series.data.reduce((seriesSum: number, item: any) => seriesSum + item.value, 0), 0);
+    }
   }
 
   public getAverageValue(): number {
-    if (this.config.data.length === 0) return 0;
-    return this.getTotalValue() / this.config.data.length;
+    if (Array.isArray(this.config.data)) {
+      if (this.config.data.length === 0) return 0;
+      return this.getTotalValue() / this.config.data.length;
+    } else {
+      // Multi-line data
+      const multiData = this.config.data as MultiLineChartData;
+      const totalPoints = multiData.series.reduce((sum: number, series: any) => sum + series.data.length, 0);
+      return totalPoints > 0 ? this.getTotalValue() / totalPoints : 0;
+    }
   }
 
   public getMaxValue(): number {
-    return Math.max(...this.config.data.map(item => item.value));
+    if (Array.isArray(this.config.data)) {
+      return Math.max(...this.config.data.map((item: any) => item.value));
+    } else {
+      // Multi-line data
+      const multiData = this.config.data as MultiLineChartData;
+      return Math.max(...multiData.series.flatMap((series: any) => series.data.map((item: any) => item.value)));
+    }
   }
 
   public getMinValue(): number {
-    return Math.min(...this.config.data.map(item => item.value));
+    if (Array.isArray(this.config.data)) {
+      return Math.min(...this.config.data.map((item: any) => item.value));
+    } else {
+      // Multi-line data
+      const multiData = this.config.data as MultiLineChartData;
+      return Math.min(...multiData.series.flatMap((series: any) => series.data.map((item: any) => item.value)));
+    }
   }
 
   public getTrend(): 'increasing' | 'decreasing' | 'stable' {
-    if (this.config.data.length < 2) return 'stable';
+    const data = this.getChartData();
+    if (data.length < 2) return 'stable';
     
-    const firstValue = this.config.data[0].value;
-    const lastValue = this.config.data[this.config.data.length - 1].value;
+    const firstValue = data[0].value;
+    const lastValue = data[data.length - 1].value;
     const difference = lastValue - firstValue;
     const threshold = (this.getMaxValue() - this.getMinValue()) * 0.1; // 10% threshold
     
@@ -238,24 +277,27 @@ export class LineChartComponent implements OnInit, OnDestroy, AfterViewInit, OnC
   }
 
   public getGrowthRate(): number {
-    if (this.config.data.length < 2) return 0;
+    const data = this.getChartData();
+    if (data.length < 2) return 0;
     
-    const firstValue = this.config.data[0].value;
-    const lastValue = this.config.data[this.config.data.length - 1].value;
+    const firstValue = data[0].value;
+    const lastValue = data[data.length - 1].value;
     
     if (firstValue === 0) return 0;
     return ((lastValue - firstValue) / firstValue) * 100;
   }
 
   public getDataPointsCount(): number {
-    return this.config.data.length;
+    const data = this.getChartData();
+    return data.length;
   }
 
   public getTimeRange(): string {
-    if (this.config.data.length < 2) return 'Single point';
+    const data = this.getChartData();
+    if (data.length < 2) return 'Single point';
     
-    const firstLabel = this.config.data[0].label;
-    const lastLabel = this.config.data[this.config.data.length - 1].label;
+    const firstLabel = data[0].label;
+    const lastLabel = data[data.length - 1].label;
     return `${firstLabel} - ${lastLabel}`;
   }
 }

@@ -151,6 +151,13 @@
                 : 'w-full text-left px-3 py-2 rounded-lg text-neutral-600 hover:bg-neutral-50 text-sm'">
               {{ dataSet | titlecase }}
             </button>
+            <button 
+              (click)="toggleMultiLine()"
+              [class]="customizationOptions.multiLine 
+                ? 'w-full text-left px-3 py-2 rounded-lg bg-green-50 border border-green-200 text-green-700 text-sm' 
+                : 'w-full text-left px-3 py-2 rounded-lg text-neutral-600 hover:bg-neutral-50 text-sm'">
+              Multi-Line (Revenue, Profit, Expenses)
+            </button>
           </div>
         </div>
 
@@ -240,6 +247,22 @@
                 (change)="toggleShowGrid()"
                 class="rounded border-neutral-300 text-green-600 focus:ring-green-500">
               <span class="ml-2 text-sm text-neutral-700">Show Grid</span>
+            </label>
+            <label class="flex items-center">
+              <input 
+                type="checkbox" 
+                [checked]="customizationOptions.multiLine"
+                (change)="toggleMultiLine()"
+                class="rounded border-neutral-300 text-green-600 focus:ring-green-500">
+              <span class="ml-2 text-sm text-neutral-700">Multi-Line Mode</span>
+            </label>
+            <label class="flex items-center">
+              <input 
+                type="checkbox" 
+                [checked]="customizationOptions.showLegend"
+                (change)="toggleLegend()"
+                class="rounded border-neutral-300 text-green-600 focus:ring-green-500">
+              <span class="ml-2 text-sm text-neutral-700">Show Legend</span>
             </label>
           </div>
         </div>
