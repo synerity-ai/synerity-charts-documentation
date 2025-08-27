@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { BarChartDemoComponent } from './bar-chart-demo/bar-chart-demo.component';
 import { BarChartPageComponent } from './bar-chart-demo/bar-chart-page.component';
 import { LineChartDemoComponent } from './line-chart-demo/line-chart-demo.component';
+import { LineChartPageComponent } from './line-chart-demo/line-chart-page.component';
 import { AreaChartDemoComponent } from './area-chart-demo/area-chart-demo.component';
 import { PieChartDemoComponent } from './pie-chart-demo/pie-chart-demo.component';
 import { ScatterChartDemoComponent } from './scatter-chart-demo/scatter-chart-demo.component';
@@ -20,6 +21,7 @@ import { ChartsModule } from '../charts/charts.module';
     BarChartDemoComponent,
     BarChartPageComponent,
     LineChartDemoComponent,
+    LineChartPageComponent,
     AreaChartDemoComponent,
     PieChartDemoComponent,
     ScatterChartDemoComponent,
@@ -39,6 +41,7 @@ import { ChartsModule } from '../charts/charts.module';
     BarChartDemoComponent,
     BarChartPageComponent,
     LineChartDemoComponent,
+    LineChartPageComponent,
     AreaChartDemoComponent,
     PieChartDemoComponent,
     ScatterChartDemoComponent,

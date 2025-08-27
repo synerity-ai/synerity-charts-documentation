@@ -1,7 +1,8 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChartData } from '@synerity/charts';
 import { LineChartConfig } from '../../charts/line-chart/line-chart.component';
+import { LineChartComponent } from '../../charts/line-chart/line-chart.component';
 
 @Component({
   selector: 'app-line-chart-demo',
@@ -10,6 +11,8 @@ import { LineChartConfig } from '../../charts/line-chart/line-chart.component';
   styleUrls: ['./line-chart-demo.component.scss']
 })
 export class LineChartDemoComponent implements OnInit, OnDestroy {
+  
+  @ViewChild('lineChart') lineChartComponent!: LineChartComponent;
   
   constructor(private cdr: ChangeDetectorRef) {}
 
@@ -109,10 +112,10 @@ export class LineChartDemoComponent implements OnInit, OnDestroy {
     const selectedData = this.sampleDataSets[this.currentDataSet as keyof typeof this.sampleDataSets];
     const colorScheme = this.colorSchemes[this.customizationOptions.colorScheme as keyof typeof this.colorSchemes];
     
-    this.lineChartConfig.data = selectedData.map((item, index) => ({
+    this.lineChartConfig = { ...this.lineChartConfig, data: selectedData.map((item, index) => ({
       ...item,
       color: colorScheme[index % colorScheme.length]
-    }));
+    }))};
   }
 
   updateCurrentChartData() {
@@ -122,57 +125,97 @@ export class LineChartDemoComponent implements OnInit, OnDestroy {
   // Customization Methods
   updateWidth(value: number) {
     this.customizationOptions.width = value;
-    this.lineChartConfig.width = value;
-    this.cdr.detectChanges();
+    this.lineChartConfig = { ...this.lineChartConfig, width: value };
+    
+    if (this.lineChartComponent) {
+      this.lineChartComponent.updateChartOptions({ width: value });
+    } else {
+      this.triggerChartUpdate();
+    }
   }
 
   updateHeight(value: number) {
     this.customizationOptions.height = value;
-    this.lineChartConfig.height = value;
-    this.cdr.detectChanges();
+    this.lineChartConfig = { ...this.lineChartConfig, height: value };
+    
+    if (this.lineChartComponent) {
+      this.lineChartComponent.updateChartOptions({ height: value });
+    } else {
+      this.triggerChartUpdate();
+    }
   }
 
   toggleAnimation() {
     this.customizationOptions.animate = !this.customizationOptions.animate;
-    this.lineChartConfig.animate = this.customizationOptions.animate;
-    this.cdr.detectChanges();
+    this.lineChartConfig = { ...this.lineChartConfig, animate: this.customizationOptions.animate };
+    
+    if (this.lineChartComponent) {
+      this.lineChartComponent.updateChartOptions({ animate: this.customizationOptions.animate });
+    } else {
+      this.triggerChartUpdate();
+    }
   }
 
   toggleShowPoints() {
     this.customizationOptions.showPoints = !this.customizationOptions.showPoints;
-    this.lineChartConfig.showPoints = this.customizationOptions.showPoints;
-    this.cdr.detectChanges();
+    this.lineChartConfig = { ...this.lineChartConfig, showPoints: this.customizationOptions.showPoints };
+    
+    if (this.lineChartComponent) {
+      this.lineChartComponent.updateChartOptions({ showPoints: this.customizationOptions.showPoints });
+    } else {
+      this.triggerChartUpdate();
+    }
   }
 
   toggleShowGrid() {
     this.customizationOptions.showGrid = !this.customizationOptions.showGrid;
-    this.lineChartConfig.showGrid = this.customizationOptions.showGrid;
-    this.cdr.detectChanges();
+    this.lineChartConfig = { ...this.lineChartConfig, showGrid: this.customizationOptions.showGrid };
+    
+    if (this.lineChartComponent) {
+      this.lineChartComponent.updateChartOptions({ showGrid: this.customizationOptions.showGrid });
+    } else {
+      this.triggerChartUpdate();
+    }
   }
 
   updateCurveType(curveType: string) {
     this.customizationOptions.curveType = curveType as any;
-    this.lineChartConfig.curveType = curveType as any;
-    this.cdr.detectChanges();
+    this.lineChartConfig = { ...this.lineChartConfig, curveType: curveType as any };
+    
+    if (this.lineChartComponent) {
+      this.lineChartComponent.updateChartOptions({ curveType: curveType as any });
+    } else {
+      this.triggerChartUpdate();
+    }
   }
 
   updateStrokeWidth(value: number) {
     this.customizationOptions.strokeWidth = value;
-    this.lineChartConfig.strokeWidth = value;
-    this.cdr.detectChanges();
+    this.lineChartConfig = { ...this.lineChartConfig, strokeWidth: value };
+    
+    if (this.lineChartComponent) {
+      this.lineChartComponent.updateChartOptions({ strokeWidth: value });
+    } else {
+      this.triggerChartUpdate();
+    }
   }
 
   changeColorScheme(scheme: string) {
     this.customizationOptions.colorScheme = scheme;
     this.updateChartData();
     this.updateCurrentChartData();
-    this.cdr.detectChanges();
+    this.triggerChartUpdate();
   }
 
   changeDataSet(dataSet: string) {
     this.currentDataSet = dataSet;
     this.updateChartData();
     this.updateCurrentChartData();
+    this.triggerChartUpdate();
+  }
+
+  triggerChartUpdate() {
+    this.lineChartConfig = { ...this.lineChartConfig };
     this.cdr.detectChanges();
   }
 
@@ -181,14 +224,14 @@ export class LineChartDemoComponent implements OnInit, OnDestroy {
     const dataPoints = Math.floor(Math.random() * 8) + 4; // 4-11 data points
     const colorScheme = this.colorSchemes[this.customizationOptions.colorScheme as keyof typeof this.colorSchemes];
     
-    this.lineChartConfig.data = Array.from({ length: dataPoints }, (_, i) => ({
+    this.lineChartConfig = { ...this.lineChartConfig, data: Array.from({ length: dataPoints }, (_, i) => ({
       label: `Point ${i + 1}`,
       value: Math.floor(Math.random() * 100) + 20,
       color: colorScheme[i % colorScheme.length]
-    }));
+    }))};
     
     this.updateCurrentChartData();
-    this.cdr.detectChanges();
+    this.triggerChartUpdate();
   }
 
   // Chart Event Handlers

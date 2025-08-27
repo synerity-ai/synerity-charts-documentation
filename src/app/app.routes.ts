@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { BarChartPageComponent } from './chart-demos/bar-chart-demo/bar-chart-page.component';
-import { LineChartDemoComponent } from './chart-demos/line-chart-demo/line-chart-demo.component';
+import { LineChartPageComponent } from './chart-demos/line-chart-demo/line-chart-page.component';
 import { AreaChartDemoComponent } from './chart-demos/area-chart-demo/area-chart-demo.component';
 import { PieChartDemoComponent } from './chart-demos/pie-chart-demo/pie-chart-demo.component';
 import { ScatterChartDemoComponent } from './chart-demos/scatter-chart-demo/scatter-chart-demo.component';
@@ -15,7 +15,7 @@ export const routes: Routes = [
   { path: '', redirectTo: '/charts/bar', pathMatch: 'full' },
   { path: 'charts', redirectTo: '/charts/bar', pathMatch: 'full' },
   { path: 'charts/bar', component: BarChartPageComponent },
-  { path: 'charts/line', component: LineChartDemoComponent },
+  { path: 'charts/line', component: LineChartPageComponent },
   { path: 'charts/area', component: AreaChartDemoComponent },
   { path: 'charts/pie', component: PieChartDemoComponent },
   { path: 'charts/scatter', component: ScatterChartDemoComponent },

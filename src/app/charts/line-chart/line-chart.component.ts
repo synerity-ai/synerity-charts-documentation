@@ -175,6 +175,19 @@ export class LineChartComponent implements OnInit, OnDestroy, AfterViewInit, OnC
     }
   }
 
+  public updateChartOptions(options: Partial<LineChartConfig>) {
+    if (this.chart) {
+      // Update the config with new options
+      this.config = { ...this.config, ...options };
+      
+      // Update the chart with new options
+      this.chart.updateOptions(options);
+      
+      // Trigger change detection
+      this.cdr.detectChanges();
+    }
+  }
+
   public refreshChart() {
     this.initAttempts = 0; // Reset attempts on manual refresh
     setTimeout(() => {

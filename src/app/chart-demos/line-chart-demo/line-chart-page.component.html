@@ -1,0 +1,335 @@
+<div class="p-8">
+  <!-- Page Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-neutral-900 mb-2">Line Chart</h1>
+    <p class="text-lg text-neutral-600">Time series visualization with smooth curves and interactive data points</p>
+  </div>
+
+  <!-- Tab Navigation -->
+  <div class="flex space-x-1 mb-8 bg-neutral-100 p-1 rounded-lg">
+    <button 
+      (click)="setActiveTab('demo')"
+      [class]="activeTab === 'demo' ? 'bg-white text-blue-600 shadow-sm' : 'text-neutral-600 hover:text-neutral-900'"
+      class="px-4 py-2 rounded-md text-sm font-medium transition-all duration-200">
+      Demo
+    </button>
+    <button 
+      (click)="setActiveTab('documentation')"
+      [class]="activeTab === 'documentation' ? 'bg-white text-blue-600 shadow-sm' : 'text-neutral-600 hover:text-neutral-900'"
+      class="px-4 py-2 rounded-md text-sm font-medium transition-all duration-200">
+      Documentation
+    </button>
+    <button 
+      (click)="setActiveTab('how-to-use')"
+      [class]="activeTab === 'how-to-use' ? 'bg-white text-blue-600 shadow-sm' : 'text-neutral-600 hover:text-neutral-900'"
+      class="px-4 py-2 rounded-md text-sm font-medium transition-all duration-200">
+      How To Use
+    </button>
+  </div>
+
+  <!-- Demo Tab -->
+  <div *ngIf="activeTab === 'demo'" class="animate-fade-in">
+    <app-line-chart-demo></app-line-chart-demo>
+  </div>
+
+  <!-- Documentation Tab -->
+  <div *ngIf="activeTab === 'documentation'" class="animate-fade-in">
+    <div class="max-w-4xl space-y-8">
+      <!-- Overview -->
+      <section>
+        <h2 class="text-2xl font-bold text-neutral-900 mb-4">Overview</h2>
+        <div class="bg-white rounded-lg border border-neutral-200 p-6">
+          <p class="text-neutral-700 mb-4">
+            Line charts are perfect for visualizing time series data and trends over time. They connect data points with lines to show progression, patterns, and relationships in your data.
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+            <div class="text-center p-4 bg-blue-50 rounded-lg">
+              <div class="text-2xl font-bold text-blue-600 mb-2">11</div>
+              <div class="text-sm text-blue-700">Curve Types</div>
+            </div>
+            <div class="text-center p-4 bg-green-50 rounded-lg">
+              <div class="text-2xl font-bold text-green-600 mb-2">∞</div>
+              <div class="text-sm text-green-700">Data Points</div>
+            </div>
+            <div class="text-center p-4 bg-purple-50 rounded-lg">
+              <div class="text-2xl font-bold text-purple-600 mb-2">100%</div>
+              <div class="text-sm text-purple-700">Responsive</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Features -->
+      <section>
+        <h2 class="text-2xl font-bold text-neutral-900 mb-4">Features</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-white rounded-lg border border-neutral-200 p-6">
+            <h3 class="text-lg font-semibold text-neutral-900 mb-3">Interactive Elements</h3>
+            <ul class="space-y-2 text-neutral-700">
+              <li class="flex items-center">
+                <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                Hover tooltips with detailed information
+              </li>
+              <li class="flex items-center">
+                <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                Click interactions for data points
+              </li>
+              <li class="flex items-center">
+                <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                Smooth animations and transitions
+              </li>
+            </ul>
+          </div>
+
+          <div class="bg-white rounded-lg border border-neutral-200 p-6">
+            <h3 class="text-lg font-semibold text-neutral-900 mb-3">Customization</h3>
+            <ul class="space-y-2 text-neutral-700">
+              <li class="flex items-center">
+                <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                Multiple curve interpolation types
+              </li>
+              <li class="flex items-center">
+                <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                Configurable stroke width and colors
+              </li>
+              <li class="flex items-center">
+                <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                Optional grid lines and data points
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- API Reference -->
+      <section>
+        <h2 class="text-2xl font-bold text-neutral-900 mb-4">API Reference</h2>
+        <div class="bg-white rounded-lg border border-neutral-200 p-6">
+          <h3 class="text-lg font-semibold text-neutral-900 mb-4">LineChartConfig Interface</h3>
+          <pre class="bg-neutral-50 rounded-lg p-4 overflow-x-auto text-sm"><code>interface LineChartConfig &#123;
+  data: ChartData[];
+  width?: number;
+  height?: number;
+  animate?: boolean;
+  showPoints?: boolean;
+  showGrid?: boolean;
+  curveType?: 'linear' | 'monotoneX' | 'step' | 'stepAfter' | 
+              'stepBefore' | 'basis' | 'cardinal' | 'catmullRom';
+  strokeWidth?: number;
+  colors?: string[];
+&#125;</code></pre>
+
+          <h3 class="text-lg font-semibold text-neutral-900 mb-4 mt-6">ChartData Interface</h3>
+          <pre class="bg-neutral-50 rounded-lg p-4 overflow-x-auto text-sm"><code>interface ChartData &#123;
+  label: string;
+  value: number;
+  color?: string;
+&#125;</code></pre>
+        </div>
+      </section>
+
+      <!-- Curve Types -->
+      <section>
+        <h2 class="text-2xl font-bold text-neutral-900 mb-4">Curve Types</h2>
+        <div class="bg-white rounded-lg border border-neutral-200 p-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <h4 class="font-semibold text-neutral-900 mb-2">Linear</h4>
+              <p class="text-sm text-neutral-600">Straight lines between points</p>
+            </div>
+            <div>
+              <h4 class="font-semibold text-neutral-900 mb-2">Monotone X</h4>
+              <p class="text-sm text-neutral-600">Smooth curve preserving monotonicity</p>
+            </div>
+            <div>
+              <h4 class="font-semibold text-neutral-900 mb-2">Step</h4>
+              <p class="text-sm text-neutral-600">Step function with centered steps</p>
+            </div>
+            <div>
+              <h4 class="font-semibold text-neutral-900 mb-2">Basis</h4>
+              <p class="text-sm text-neutral-600">B-spline interpolation</p>
+            </div>
+            <div>
+              <h4 class="font-semibold text-neutral-900 mb-2">Cardinal</h4>
+              <p class="text-sm text-neutral-600">Cardinal spline interpolation</p>
+            </div>
+            <div>
+              <h4 class="font-semibold text-neutral-900 mb-2">Catmull-Rom</h4>
+              <p class="text-sm text-neutral-600">Catmull-Rom spline interpolation</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- How To Use Tab -->
+  <div *ngIf="activeTab === 'how-to-use'" class="animate-fade-in">
+    <div class="max-w-4xl space-y-8">
+      <!-- Installation -->
+      <section>
+        <h2 class="text-2xl font-bold text-neutral-900 mb-4">Installation</h2>
+        <div class="bg-white rounded-lg border border-neutral-200 p-6">
+          <p class="text-neutral-700 mb-4">Install the &#64;synerity/charts library:</p>
+          <pre class="bg-neutral-50 rounded-lg p-4 overflow-x-auto text-sm"><code>npm install &#64;synerity/charts</code></pre>
+        </div>
+      </section>
+
+      <!-- Basic Usage -->
+      <section>
+        <h2 class="text-2xl font-bold text-neutral-900 mb-4">Basic Usage</h2>
+        <div class="bg-white rounded-lg border border-neutral-200 p-6">
+          <h3 class="text-lg font-semibold text-neutral-900 mb-3">Vanilla JavaScript</h3>
+          <pre class="bg-neutral-50 rounded-lg p-4 overflow-x-auto text-sm"><code>import &#123; LineChart &#125; from '&#64;synerity/charts';
+
+const data = [
+  &#123; label: 'Jan', value: 65, color: '#3B82F6' &#125;,
+  &#123; label: 'Feb', value: 78, color: '#10B981' &#125;,
+  &#123; label: 'Mar', value: 90, color: '#F59E0B' &#125;
+];
+
+const chart = new LineChart(&#123;
+  container: '#chart-container',
+  data: data,
+  options: &#123;
+    width: 600,
+    height: 400,
+    animate: true,
+    showPoints: true,
+    curveType: 'monotoneX'
+  &#125;
+&#125;);</code></pre>
+
+          <h3 class="text-lg font-semibold text-neutral-900 mb-3 mt-6">Angular Component</h3>
+          <pre class="bg-neutral-50 rounded-lg p-4 overflow-x-auto text-sm"><code>&lt;app-line-chart 
+  [config]="lineChartConfig"
+  (chartReady)="onChartReady()"
+  (dataUpdate)="onDataUpdate($event)"&gt;
+&lt;/app-line-chart&gt;</code></pre>
+        </div>
+      </section>
+
+      <!-- Step-by-Step Guide -->
+      <section>
+        <h2 class="text-2xl font-bold text-neutral-900 mb-4">Step-by-Step Guide</h2>
+        <div class="space-y-4">
+          <div class="bg-white rounded-lg border border-neutral-200 p-6">
+            <div class="flex items-start space-x-4">
+              <div class="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                <span class="text-blue-600 font-semibold text-sm">1</span>
+              </div>
+              <div>
+                <h3 class="text-lg font-semibold text-neutral-900 mb-2">Prepare Your Data</h3>
+                <p class="text-neutral-700 mb-3">Format your data as an array of objects with label, value, and optional color properties.</p>
+                <pre class="bg-neutral-50 rounded-lg p-3 overflow-x-auto text-sm"><code>const data = [
+  &#123; label: 'Q1', value: 100, color: '#3B82F6' &#125;,
+  &#123; label: 'Q2', value: 150, color: '#10B981' &#125;,
+  &#123; label: 'Q3', value: 120, color: '#F59E0B' &#125;,
+  &#123; label: 'Q4', value: 200, color: '#EF4444' &#125;
+];</code></pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg border border-neutral-200 p-6">
+            <div class="flex items-start space-x-4">
+              <div class="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                <span class="text-blue-600 font-semibold text-sm">2</span>
+              </div>
+              <div>
+                <h3 class="text-lg font-semibold text-neutral-900 mb-2">Configure Chart Options</h3>
+                <p class="text-neutral-700 mb-3">Set up the chart configuration with your preferred options.</p>
+                <pre class="bg-neutral-50 rounded-lg p-3 overflow-x-auto text-sm"><code>const config = &#123;
+  data: data,
+  width: 600,
+  height: 400,
+  animate: true,
+  showPoints: true,
+  showGrid: true,
+  curveType: 'monotoneX',
+  strokeWidth: 2
+&#125;;</code></pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg border border-neutral-200 p-6">
+            <div class="flex items-start space-x-4">
+              <div class="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                <span class="text-blue-600 font-semibold text-sm">3</span>
+              </div>
+              <div>
+                <h3 class="text-lg font-semibold text-neutral-900 mb-2">Initialize the Chart</h3>
+                <p class="text-neutral-700 mb-3">Create the chart instance and render it in your container.</p>
+                <pre class="bg-neutral-50 rounded-lg p-3 overflow-x-auto text-sm"><code>const chart = new LineChart(&#123;
+  container: '#chart-container',
+  data: data,
+  options: config
+&#125;);</code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Best Practices -->
+      <section>
+        <h2 class="text-2xl font-bold text-neutral-900 mb-4">Best Practices</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-white rounded-lg border border-neutral-200 p-6">
+            <h3 class="text-lg font-semibold text-neutral-900 mb-3">Data Preparation</h3>
+            <ul class="space-y-2 text-neutral-700">
+              <li>• Sort data chronologically for time series</li>
+              <li>• Use consistent color schemes</li>
+              <li>• Include meaningful labels</li>
+              <li>• Handle missing data appropriately</li>
+            </ul>
+          </div>
+
+          <div class="bg-white rounded-lg border border-neutral-200 p-6">
+            <h3 class="text-lg font-semibold text-neutral-900 mb-3">Visual Design</h3>
+            <ul class="space-y-2 text-neutral-700">
+              <li>• Choose appropriate curve types</li>
+              <li>• Use grid lines for readability</li>
+              <li>• Ensure sufficient contrast</li>
+              <li>• Keep animations subtle</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Troubleshooting -->
+      <section>
+        <h2 class="text-2xl font-bold text-neutral-900 mb-4">Troubleshooting</h2>
+        <div class="bg-white rounded-lg border border-neutral-200 p-6">
+          <div class="space-y-4">
+            <div>
+              <h4 class="font-semibold text-neutral-900 mb-2">Chart not rendering?</h4>
+              <p class="text-sm text-neutral-600">Check that your container element exists and has proper dimensions.</p>
+            </div>
+            <div>
+              <h4 class="font-semibold text-neutral-900 mb-2">Data not updating?</h4>
+              <p class="text-sm text-neutral-600">Ensure you're calling the update method with new data.</p>
+            </div>
+            <div>
+              <h4 class="font-semibold text-neutral-900 mb-2">Performance issues?</h4>
+              <p class="text-sm text-neutral-600">Consider reducing animation complexity for large datasets.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
