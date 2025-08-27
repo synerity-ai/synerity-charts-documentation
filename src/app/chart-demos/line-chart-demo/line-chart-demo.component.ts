@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ChartData } from '@synerity/charts';
+import { ChartData, MultiLineChartData } from '@synerity/charts';
 import { LineChartConfig } from '../../charts/line-chart/line-chart.component';
 import { LineChartComponent } from '../../charts/line-chart/line-chart.component';
 
@@ -51,6 +51,10 @@ export class LineChartDemoComponent implements OnInit, OnDestroy {
     multiLine: false
   };
 
+  // Data Type and Set Management
+  dataSetType: 'single' | 'multi' = 'single';
+  currentDataSet = 'revenue';
+
   // Color Schemes
   colorSchemes = {
     default: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4'],
@@ -71,8 +75,8 @@ export class LineChartDemoComponent implements OnInit, OnDestroy {
     { value: 'catmullRom', label: 'Catmull-Rom' }
   ];
 
-  // Sample Data Sets
-  sampleDataSets = {
+  // Single Line Data Sets
+  singleLineDataSets = {
     revenue: [
       { label: 'Jan', value: 45000, color: '#3B82F6' },
       { label: 'Feb', value: 52000, color: '#10B981' },
@@ -95,8 +99,12 @@ export class LineChartDemoComponent implements OnInit, OnDestroy {
       { label: 'Fri', value: 28, color: '#8B5CF6' },
       { label: 'Sat', value: 25, color: '#06B6D4' },
       { label: 'Sun', value: 23, color: '#EC4899' }
-    ],
-    multiLine: {
+    ]
+  };
+
+  // Multi-Line Data Sets
+  multiLineDataSets = {
+    financial: {
       series: [
         {
           name: 'Revenue',
@@ -136,10 +144,88 @@ export class LineChartDemoComponent implements OnInit, OnDestroy {
         }
       ],
       labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+    },
+    metrics: {
+      series: [
+        {
+          name: 'Active Users',
+          data: [
+            { label: 'Q1', value: 1200 },
+            { label: 'Q2', value: 1800 },
+            { label: 'Q3', value: 2200 },
+            { label: 'Q4', value: 2800 }
+          ],
+          color: '#3B82F6'
+        },
+        {
+          name: 'New Users',
+          data: [
+            { label: 'Q1', value: 300 },
+            { label: 'Q2', value: 450 },
+            { label: 'Q3', value: 520 },
+            { label: 'Q4', value: 680 }
+          ],
+          color: '#10B981'
+        },
+        {
+          name: 'Churned Users',
+          data: [
+            { label: 'Q1', value: 80 },
+            { label: 'Q2', value: 120 },
+            { label: 'Q3', value: 95 },
+            { label: 'Q4', value: 150 }
+          ],
+          color: '#EF4444'
+        }
+      ],
+      labels: ['Q1', 'Q2', 'Q3', 'Q4']
+    },
+    weather: {
+      series: [
+        {
+          name: 'Temperature (°C)',
+          data: [
+            { label: 'Mon', value: 22 },
+            { label: 'Tue', value: 24 },
+            { label: 'Wed', value: 19 },
+            { label: 'Thu', value: 26 },
+            { label: 'Fri', value: 28 },
+            { label: 'Sat', value: 25 },
+            { label: 'Sun', value: 23 }
+          ],
+          color: '#F59E0B'
+        },
+        {
+          name: 'Humidity (%)',
+          data: [
+            { label: 'Mon', value: 65 },
+            { label: 'Tue', value: 58 },
+            { label: 'Wed', value: 72 },
+            { label: 'Thu', value: 45 },
+            { label: 'Fri', value: 38 },
+            { label: 'Sat', value: 52 },
+            { label: 'Sun', value: 61 }
+          ],
+          color: '#06B6D4'
+        },
+        {
+          name: 'Wind Speed (km/h)',
+          data: [
+            { label: 'Mon', value: 12 },
+            { label: 'Tue', value: 8 },
+            { label: 'Wed', value: 15 },
+            { label: 'Thu', value: 6 },
+            { label: 'Fri', value: 10 },
+            { label: 'Sat', value: 9 },
+            { label: 'Sun', value: 11 }
+          ],
+          color: '#8B5CF6'
+        }
+      ],
+      labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
     }
   };
 
-  currentDataSet = 'revenue';
   public isChartReady = false;
   public currentChartData: ChartData[] = [];
 
@@ -152,25 +238,53 @@ export class LineChartDemoComponent implements OnInit, OnDestroy {
     // Cleanup if needed
   }
 
+  // Data Type Management
+  changeDataSetType(type: 'single' | 'multi') {
+    this.dataSetType = type;
+    this.customizationOptions.multiLine = type === 'multi';
+    this.customizationOptions.showLegend = type === 'multi';
+    
+    // Reset to first data set of the new type
+    if (type === 'single') {
+      this.currentDataSet = 'revenue';
+    } else {
+      this.currentDataSet = 'financial';
+    }
+    
+    this.updateChartData();
+  }
+
   // Data Management
   updateChartData() {
-    const selectedData = this.sampleDataSets[this.currentDataSet as keyof typeof this.sampleDataSets];
-    const colorScheme = this.colorSchemes[this.customizationOptions.colorScheme as keyof typeof this.colorSchemes];
-    
-    if (Array.isArray(selectedData)) {
-      this.lineChartConfig = { ...this.lineChartConfig, data: selectedData.map((item: any, index: number) => ({
-        ...item,
-        color: colorScheme[index % colorScheme.length]
-      }))};
+    if (this.dataSetType === 'single') {
+      const selectedData = this.singleLineDataSets[this.currentDataSet as keyof typeof this.singleLineDataSets];
+      const colorScheme = this.colorSchemes[this.customizationOptions.colorScheme as keyof typeof this.colorSchemes];
+      
+      this.lineChartConfig = { 
+        ...this.lineChartConfig, 
+        data: selectedData.map((item: any, index: number) => ({
+          ...item,
+          color: colorScheme[index % colorScheme.length]
+        })),
+        multiLine: false,
+        showLegend: false
+      };
+    } else {
+      const selectedData = this.multiLineDataSets[this.currentDataSet as keyof typeof this.multiLineDataSets];
+      this.lineChartConfig = { 
+        ...this.lineChartConfig, 
+        data: selectedData,
+        multiLine: true,
+        showLegend: true
+      };
     }
   }
 
   updateCurrentChartData() {
-    if (Array.isArray(this.lineChartConfig.data)) {
+    if (this.dataSetType === 'single' && Array.isArray(this.lineChartConfig.data)) {
       this.currentChartData = [...this.lineChartConfig.data];
-    } else {
-      // For multi-line data, use the first series
-      const multiData = this.lineChartConfig.data as any;
+    } else if (this.dataSetType === 'multi') {
+      const multiData = this.lineChartConfig.data as MultiLineChartData;
       this.currentChartData = multiData.series.length > 0 ? [...multiData.series[0].data] : [];
     }
   }
@@ -253,24 +367,6 @@ export class LineChartDemoComponent implements OnInit, OnDestroy {
     }
   }
 
-  toggleMultiLine() {
-    this.customizationOptions.multiLine = !this.customizationOptions.multiLine;
-    this.lineChartConfig = { ...this.lineChartConfig, multiLine: this.customizationOptions.multiLine };
-    
-    // Update data based on multi-line mode
-    if (this.customizationOptions.multiLine) {
-      this.lineChartConfig = { ...this.lineChartConfig, data: this.sampleDataSets.multiLine };
-    } else {
-      this.updateChartData();
-    }
-    
-    if (this.lineChartComponent) {
-      this.lineChartComponent.updateChartOptions({ multiLine: this.customizationOptions.multiLine });
-    } else {
-      this.triggerChartUpdate();
-    }
-  }
-
   toggleLegend() {
     this.customizationOptions.showLegend = !this.customizationOptions.showLegend;
     this.lineChartConfig = { ...this.lineChartConfig, showLegend: this.customizationOptions.showLegend };
@@ -303,14 +399,45 @@ export class LineChartDemoComponent implements OnInit, OnDestroy {
 
   // Random Data Generation
   generateRandomData() {
-    const dataPoints = Math.floor(Math.random() * 8) + 4; // 4-11 data points
-    const colorScheme = this.colorSchemes[this.customizationOptions.colorScheme as keyof typeof this.colorSchemes];
-    
-    this.lineChartConfig = { ...this.lineChartConfig, data: Array.from({ length: dataPoints }, (_, i) => ({
-      label: `Point ${i + 1}`,
-      value: Math.floor(Math.random() * 100) + 20,
-      color: colorScheme[i % colorScheme.length]
-    }))};
+    if (this.dataSetType === 'single') {
+      const dataPoints = Math.floor(Math.random() * 8) + 4; // 4-11 data points
+      const colorScheme = this.colorSchemes[this.customizationOptions.colorScheme as keyof typeof this.colorSchemes];
+      
+      this.lineChartConfig = { 
+        ...this.lineChartConfig, 
+        data: Array.from({ length: dataPoints }, (_, i) => ({
+          label: `Point ${i + 1}`,
+          value: Math.floor(Math.random() * 100) + 20,
+          color: colorScheme[i % colorScheme.length]
+        })),
+        multiLine: false,
+        showLegend: false
+      };
+    } else {
+      // Generate random multi-line data
+      const dataPoints = Math.floor(Math.random() * 6) + 4; // 4-9 data points
+      const seriesCount = Math.floor(Math.random() * 3) + 2; // 2-4 series
+      const colorScheme = this.colorSchemes[this.customizationOptions.colorScheme as keyof typeof this.colorSchemes];
+      
+      const series = Array.from({ length: seriesCount }, (_, seriesIndex) => ({
+        name: `Series ${seriesIndex + 1}`,
+        data: Array.from({ length: dataPoints }, (_, i) => ({
+          label: `Point ${i + 1}`,
+          value: Math.floor(Math.random() * 100) + 20
+        })),
+        color: colorScheme[seriesIndex % colorScheme.length]
+      }));
+      
+      this.lineChartConfig = { 
+        ...this.lineChartConfig, 
+        data: {
+          series,
+          labels: Array.from({ length: dataPoints }, (_, i) => `Point ${i + 1}`)
+        },
+        multiLine: true,
+        showLegend: true
+      };
+    }
     
     this.updateCurrentChartData();
     this.triggerChartUpdate();

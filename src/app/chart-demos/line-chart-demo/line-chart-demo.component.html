@@ -139,25 +139,67 @@
 
       <!-- Customization Panel -->
       <div class="space-y-6">
+        <!-- Data Type Selection -->
+        <div class="bg-white rounded-lg border border-neutral-200 p-4">
+          <h3 class="text-sm font-semibold text-neutral-900 mb-3">Data Type</h3>
+          <div class="space-y-2">
+            <button 
+              (click)="changeDataSetType('single')"
+              [class]="dataSetType === 'single' 
+                ? 'w-full text-left px-3 py-2 rounded-lg bg-green-50 border border-green-200 text-green-700 text-sm' 
+                : 'w-full text-left px-3 py-2 rounded-lg text-neutral-600 hover:bg-neutral-50 text-sm'">
+              Single Line
+            </button>
+            <button 
+              (click)="changeDataSetType('multi')"
+              [class]="dataSetType === 'multi' 
+                ? 'w-full text-left px-3 py-2 rounded-lg bg-green-50 border border-green-200 text-green-700 text-sm' 
+                : 'w-full text-left px-3 py-2 rounded-lg text-neutral-600 hover:bg-neutral-50 text-sm'">
+              Multi-Line
+            </button>
+          </div>
+        </div>
+
         <!-- Data Set Selection -->
         <div class="bg-white rounded-lg border border-neutral-200 p-4">
           <h3 class="text-sm font-semibold text-neutral-900 mb-3">Data Set</h3>
           <div class="space-y-2">
-            <button 
-              *ngFor="let dataSet of ['revenue', 'users', 'temperature']"
-              (click)="changeDataSet(dataSet)"
-              [class]="currentDataSet === dataSet 
-                ? 'w-full text-left px-3 py-2 rounded-lg bg-green-50 border border-green-200 text-green-700 text-sm' 
-                : 'w-full text-left px-3 py-2 rounded-lg text-neutral-600 hover:bg-neutral-50 text-sm'">
-              {{ dataSet | titlecase }}
-            </button>
-            <button 
-              (click)="toggleMultiLine()"
-              [class]="customizationOptions.multiLine 
-                ? 'w-full text-left px-3 py-2 rounded-lg bg-green-50 border border-green-200 text-green-700 text-sm' 
-                : 'w-full text-left px-3 py-2 rounded-lg text-neutral-600 hover:bg-neutral-50 text-sm'">
-              Multi-Line (Revenue, Profit, Expenses)
-            </button>
+            <!-- Single Line Data Sets -->
+            <div *ngIf="dataSetType === 'single'">
+              <button 
+                *ngFor="let dataSet of ['revenue', 'users', 'temperature']"
+                (click)="changeDataSet(dataSet)"
+                [class]="currentDataSet === dataSet 
+                  ? 'w-full text-left px-3 py-2 rounded-lg bg-green-50 border border-green-200 text-green-700 text-sm' 
+                  : 'w-full text-left px-3 py-2 rounded-lg text-neutral-600 hover:bg-neutral-50 text-sm'">
+                {{ dataSet | titlecase }}
+              </button>
+            </div>
+            
+            <!-- Multi-Line Data Sets -->
+            <div *ngIf="dataSetType === 'multi'">
+              <button 
+                (click)="changeDataSet('financial')"
+                [class]="currentDataSet === 'financial' 
+                  ? 'w-full text-left px-3 py-2 rounded-lg bg-green-50 border border-green-200 text-green-700 text-sm' 
+                  : 'w-full text-left px-3 py-2 rounded-lg text-neutral-600 hover:bg-neutral-50 text-sm'">
+                Financial (Revenue, Profit, Expenses)
+              </button>
+              <button 
+                (click)="changeDataSet('metrics')"
+                [class]="currentDataSet === 'metrics' 
+                  ? 'w-full text-left px-3 py-2 rounded-lg bg-green-50 border border-green-200 text-green-700 text-sm' 
+                  : 'w-full text-left px-3 py-2 rounded-lg text-neutral-600 hover:bg-neutral-50 text-sm'">
+                User Metrics (Active, New, Churned)
+              </button>
+              <button 
+                (click)="changeDataSet('weather')"
+                [class]="currentDataSet === 'weather' 
+                  ? 'w-full text-left px-3 py-2 rounded-lg bg-green-50 border border-green-200 text-green-700 text-sm' 
+                  : 'w-full text-left px-3 py-2 rounded-lg text-neutral-600 hover:bg-neutral-50 text-sm'">
+                Weather (Temperature, Humidity, Wind)
+              </button>
+            </div>
           </div>
         </div>
 
@@ -248,15 +290,7 @@
                 class="rounded border-neutral-300 text-green-600 focus:ring-green-500">
               <span class="ml-2 text-sm text-neutral-700">Show Grid</span>
             </label>
-            <label class="flex items-center">
-              <input 
-                type="checkbox" 
-                [checked]="customizationOptions.multiLine"
-                (change)="toggleMultiLine()"
-                class="rounded border-neutral-300 text-green-600 focus:ring-green-500">
-              <span class="ml-2 text-sm text-neutral-700">Multi-Line Mode</span>
-            </label>
-            <label class="flex items-center">
+            <label class="flex items-center" *ngIf="dataSetType === 'multi'">
               <input 
                 type="checkbox" 
                 [checked]="customizationOptions.showLegend"
