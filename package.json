@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "deploy": "ng build --configuration production && gh-pages -d dist/rapid"
   },
   "private": true,
   "dependencies": {
@@ -17,7 +18,7 @@
     "@angular/platform-browser": "^19.2.0",
     "@angular/platform-browser-dynamic": "^19.2.0",
     "@angular/router": "^19.2.0",
-    "@synerity/charts": "file:../@synerity/charts",
+    "@synerity/charts": "^1.1.0",
     "d3": "^7.9.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
@@ -30,6 +31,7 @@
     "@types/d3": "^7.4.3",
     "@types/jasmine": "~5.1.0",
     "autoprefixer": "^10.4.21",
+    "gh-pages": "^6.3.0",
     "jasmine-core": "~5.6.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
