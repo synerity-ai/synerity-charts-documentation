@@ -1,0 +1,196 @@
+<div class="card">
+  <!-- Chart Header -->
+  <div class="card-header">
+    <div class="flex items-center justify-between">
+      <div>
+        <h3 class="text-lg font-semibold text-neutral-900">{{ title }}</h3>
+        <p class="text-sm text-neutral-600 mt-1">{{ description }}</p>
+      </div>
+      <div class="flex items-center space-x-2">
+        <span class="badge badge-secondary">{{ getDataPointsCount() }} points</span>
+        <button 
+          (click)="refreshChart()" 
+          class="btn-outline text-sm"
+          [disabled]="isLoading">
+          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          </svg>
+          Refresh
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart Body -->
+  <div class="card-body">
+    <!-- Chart Container -->
+    <div class="space-y-6">
+      <!-- Chart Display -->
+      <div class="bg-neutral-50 rounded-lg p-4 border border-neutral-200">
+        <div #chartContainer class="w-full h-80 bg-white rounded-lg border border-neutral-200">
+          <!-- Loading State -->
+          <div *ngIf="isLoading" class="flex items-center justify-center h-full">
+            <div class="text-center">
+              <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-secondary-600 mx-auto"></div>
+              <p class="text-neutral-600 mt-4">Loading chart...</p>
+            </div>
+          </div>
+
+          <!-- Error State -->
+          <div *ngIf="error && !isLoading" class="flex items-center justify-center h-full">
+            <div class="text-center">
+              <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                </svg>
+              </div>
+              <h3 class="text-lg font-medium text-neutral-900 mb-2">Chart Error</h3>
+              <p class="text-neutral-600 mb-4">{{ error }}</p>
+              <button (click)="refreshChart()" class="btn-secondary">
+                Try Again
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trend Analysis -->
+      <div *ngIf="!isLoading && !error" class="bg-gradient-to-r from-secondary-50 to-primary-50 rounded-lg p-6 border border-secondary-200">
+        <h4 class="text-lg font-semibold text-neutral-900 mb-4">Trend Analysis</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="text-center">
+            <div class="flex items-center justify-center mb-2">
+              <svg *ngIf="getTrend() === 'increasing'" class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+              </svg>
+              <svg *ngIf="getTrend() === 'decreasing'" class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path>
+              </svg>
+              <svg *ngIf="getTrend() === 'stable'" class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14"></path>
+              </svg>
+            </div>
+            <p class="text-sm font-medium text-neutral-600">Trend</p>
+            <p class="text-lg font-semibold text-neutral-900 capitalize">{{ getTrend() }}</p>
+          </div>
+          
+          <div class="text-center">
+            <p class="text-sm font-medium text-neutral-600">Growth Rate</p>
+            <p class="text-lg font-semibold" [ngClass]="{
+              'text-green-600': getGrowthRate() > 0,
+              'text-red-600': getGrowthRate() < 0,
+              'text-neutral-600': getGrowthRate() === 0
+            }">
+              {{ getGrowthRate() | number:'1.1-1' }}%
+            </p>
+          </div>
+          
+          <div class="text-center">
+            <p class="text-sm font-medium text-neutral-600">Time Range</p>
+            <p class="text-lg font-semibold text-neutral-900">{{ getTimeRange() }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart Statistics -->
+      <div *ngIf="!isLoading && !error" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-primary-50 rounded-lg p-4 border border-primary-200">
+          <div class="flex items-center">
+            <div class="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center mr-3">
+              <svg class="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-medium text-primary-600">Total Value</p>
+              <p class="text-lg font-semibold text-primary-900">{{ getTotalValue() | number }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-secondary-50 rounded-lg p-4 border border-secondary-200">
+          <div class="flex items-center">
+            <div class="w-8 h-8 bg-secondary-100 rounded-lg flex items-center justify-center mr-3">
+              <svg class="w-4 h-4 text-secondary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-medium text-secondary-600">Average</p>
+              <p class="text-lg font-semibold text-secondary-900">{{ getAverageValue() | number:'1.0-1' }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-accent-50 rounded-lg p-4 border border-accent-200">
+          <div class="flex items-center">
+            <div class="w-8 h-8 bg-accent-100 rounded-lg flex items-center justify-center mr-3">
+              <svg class="w-4 h-4 text-accent-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-medium text-accent-600">Maximum</p>
+              <p class="text-lg font-semibold text-accent-900">{{ getMaxValue() | number }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-neutral-50 rounded-lg p-4 border border-neutral-200">
+          <div class="flex items-center">
+            <div class="w-8 h-8 bg-neutral-100 rounded-lg flex items-center justify-center mr-3">
+              <svg class="w-4 h-4 text-neutral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-medium text-neutral-600">Minimum</p>
+              <p class="text-lg font-semibold text-neutral-900">{{ getMinValue() | number }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data Table -->
+      <div *ngIf="!isLoading && !error" class="bg-white rounded-lg border border-neutral-200 overflow-hidden">
+        <div class="px-6 py-4 border-b border-neutral-200">
+          <h4 class="text-lg font-medium text-neutral-900">Time Series Data</h4>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-neutral-200">
+            <thead class="bg-neutral-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Time Point</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Value</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Change</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Color</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-neutral-200">
+              <tr *ngFor="let item of config.data; let i = index" class="hover:bg-neutral-50">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-neutral-900">{{ item.label }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-600">{{ item.value | number }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                  <span *ngIf="i > 0" [ngClass]="{
+                    'text-green-600': item.value > config.data[i-1].value,
+                    'text-red-600': item.value < config.data[i-1].value,
+                    'text-neutral-600': item.value === config.data[i-1].value
+                  }">
+                    {{ item.value > config.data[i-1].value ? '+' : '' }}{{ (item.value - config.data[i-1].value) | number:'1.0-1' }}
+                  </span>
+                  <span *ngIf="i === 0" class="text-neutral-400">-</span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <div class="w-4 h-4 rounded mr-2" [style.background-color]="item.color"></div>
+                    <span class="text-sm text-neutral-600">{{ item.color }}</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
