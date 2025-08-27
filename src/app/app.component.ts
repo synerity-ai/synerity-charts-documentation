@@ -7,5 +7,5 @@ import { Component } from '@angular/core';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'rapid';
+  title = '@synerity/charts - Documentation & Demo';
 }
