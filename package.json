@@ -1,5 +1,5 @@
 {
-  "name": "rapid",
+  "name": "synerity-charts-documentation",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "deploy": "ng build --configuration production && gh-pages -d dist/rapid"
+    "deploy": "ng build --configuration production && gh-pages -d dist/synerity-charts-documentation/browser"
   },
   "private": true,
   "dependencies": {

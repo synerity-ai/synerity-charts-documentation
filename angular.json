@@ -6,7 +6,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "rapid": {
+    "synerity-charts-documentation": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -42,7 +42,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/rapid",
+            "outputPath": "dist/synerity-charts-documentation",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -89,10 +89,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "rapid:build:production"
+              "buildTarget": "synerity-charts-documentation:build:production"
             },
             "development": {
-              "buildTarget": "rapid:build:development"
+              "buildTarget": "synerity-charts-documentation:build:development"
             }
           },
           "defaultConfiguration": "development"
