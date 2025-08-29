@@ -276,3 +276,4 @@ Join our community discussions and get help from other developers.
 **Built with ❤️ using Angular and Tailwind CSS**
 
 *This is the official documentation and demo application for the @synerity/charts library.*
+# Updated at Fri Aug 29 18:15:16 IST 2025
