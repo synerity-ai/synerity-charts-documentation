@@ -87,6 +87,8 @@ export class HeatmapChartDemoComponent implements OnInit {
     }));
   }
 
+
+
   // Method to toggle values display
   toggleShowValues(): void {
     this.customizationOptions.showValues = !this.customizationOptions.showValues;

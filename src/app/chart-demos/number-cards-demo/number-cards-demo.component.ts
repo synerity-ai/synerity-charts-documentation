@@ -83,6 +83,8 @@ export class NumberCardsDemoComponent implements OnInit {
     }));
   }
 
+
+
   // Method to generate random data
   generateRandomData(): void {
     this.updateChartData();

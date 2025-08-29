@@ -18,14 +18,47 @@ export class LineChartDemoComponent implements OnInit, OnDestroy {
 
   // Chart Configuration
   lineChartConfig: LineChartConfig = {
-    data: [
-      { label: 'Jan', value: 65, color: '#3B82F6' },
-      { label: 'Feb', value: 78, color: '#10B981' },
-      { label: 'Mar', value: 90, color: '#F59E0B' },
-      { label: 'Apr', value: 81, color: '#EF4444' },
-      { label: 'May', value: 95, color: '#8B5CF6' },
-      { label: 'Jun', value: 88, color: '#06B6D4' }
-    ],
+    data: {
+      series: [
+        {
+          name: 'Revenue',
+          data: [
+            { label: 'Jan', value: 45000 },
+            { label: 'Feb', value: 52000 },
+            { label: 'Mar', value: 48000 },
+            { label: 'Apr', value: 61000 },
+            { label: 'May', value: 55000 },
+            { label: 'Jun', value: 67000 }
+          ],
+          color: '#3B82F6'
+        },
+        {
+          name: 'Profit',
+          data: [
+            { label: 'Jan', value: 12000 },
+            { label: 'Feb', value: 15000 },
+            { label: 'Mar', value: 14000 },
+            { label: 'Apr', value: 18000 },
+            { label: 'May', value: 16000 },
+            { label: 'Jun', value: 20000 }
+          ],
+          color: '#10B981'
+        },
+        {
+          name: 'Expenses',
+          data: [
+            { label: 'Jan', value: 33000 },
+            { label: 'Feb', value: 37000 },
+            { label: 'Mar', value: 34000 },
+            { label: 'Apr', value: 43000 },
+            { label: 'May', value: 39000 },
+            { label: 'Jun', value: 47000 }
+          ],
+          color: '#F59E0B'
+        }
+      ],
+      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+    },
     width: 600,
     height: 400,
     animate: true,
@@ -34,7 +67,7 @@ export class LineChartDemoComponent implements OnInit, OnDestroy {
     curveType: 'monotoneX',
     strokeWidth: 2,
     showLegend: true,
-    multiLine: false
+    multiLine: true
   };
 
   // Customization Options
@@ -48,12 +81,11 @@ export class LineChartDemoComponent implements OnInit, OnDestroy {
     strokeWidth: 2,
     colorScheme: 'default',
     showLegend: true,
-    multiLine: false
+    multiLine: true
   };
 
-  // Data Type and Set Management
-  dataSetType: 'single' | 'multi' = 'single';
-  currentDataSet = 'revenue';
+  // Data Set Management
+  currentDataSet = 'financial';
 
   // Color Schemes
   colorSchemes = {
@@ -74,33 +106,6 @@ export class LineChartDemoComponent implements OnInit, OnDestroy {
     { value: 'cardinal', label: 'Cardinal' },
     { value: 'catmullRom', label: 'Catmull-Rom' }
   ];
-
-  // Single Line Data Sets
-  singleLineDataSets = {
-    revenue: [
-      { label: 'Jan', value: 45000, color: '#3B82F6' },
-      { label: 'Feb', value: 52000, color: '#10B981' },
-      { label: 'Mar', value: 48000, color: '#F59E0B' },
-      { label: 'Apr', value: 61000, color: '#EF4444' },
-      { label: 'May', value: 55000, color: '#8B5CF6' },
-      { label: 'Jun', value: 67000, color: '#06B6D4' }
-    ],
-    users: [
-      { label: 'Q1', value: 1200, color: '#3B82F6' },
-      { label: 'Q2', value: 1800, color: '#10B981' },
-      { label: 'Q3', value: 2200, color: '#F59E0B' },
-      { label: 'Q4', value: 2800, color: '#EF4444' }
-    ],
-    temperature: [
-      { label: 'Mon', value: 22, color: '#3B82F6' },
-      { label: 'Tue', value: 24, color: '#10B981' },
-      { label: 'Wed', value: 19, color: '#F59E0B' },
-      { label: 'Thu', value: 26, color: '#EF4444' },
-      { label: 'Fri', value: 28, color: '#8B5CF6' },
-      { label: 'Sat', value: 25, color: '#06B6D4' },
-      { label: 'Sun', value: 23, color: '#EC4899' }
-    ]
-  };
 
   // Multi-Line Data Sets
   multiLineDataSets = {
@@ -223,6 +228,59 @@ export class LineChartDemoComponent implements OnInit, OnDestroy {
         }
       ],
       labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    },
+    sales: {
+      series: [
+        {
+          name: 'Product A',
+          data: [
+            { label: 'Jan', value: 1200 },
+            { label: 'Feb', value: 1400 },
+            { label: 'Mar', value: 1100 },
+            { label: 'Apr', value: 1600 },
+            { label: 'May', value: 1800 },
+            { label: 'Jun', value: 2000 }
+          ],
+          color: '#3B82F6'
+        },
+        {
+          name: 'Product B',
+          data: [
+            { label: 'Jan', value: 800 },
+            { label: 'Feb', value: 950 },
+            { label: 'Mar', value: 1200 },
+            { label: 'Apr', value: 1100 },
+            { label: 'May', value: 1300 },
+            { label: 'Jun', value: 1500 }
+          ],
+          color: '#10B981'
+        },
+        {
+          name: 'Product C',
+          data: [
+            { label: 'Jan', value: 600 },
+            { label: 'Feb', value: 750 },
+            { label: 'Mar', value: 900 },
+            { label: 'Apr', value: 850 },
+            { label: 'May', value: 1000 },
+            { label: 'Jun', value: 1200 }
+          ],
+          color: '#F59E0B'
+        },
+        {
+          name: 'Product D',
+          data: [
+            { label: 'Jan', value: 400 },
+            { label: 'Feb', value: 500 },
+            { label: 'Mar', value: 600 },
+            { label: 'Apr', value: 700 },
+            { label: 'May', value: 800 },
+            { label: 'Jun', value: 900 }
+          ],
+          color: '#EF4444'
+        }
+      ],
+      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
     }
   };
 
@@ -238,55 +296,34 @@ export class LineChartDemoComponent implements OnInit, OnDestroy {
     // Cleanup if needed
   }
 
-  // Data Type Management
-  changeDataSetType(type: 'single' | 'multi') {
-    this.dataSetType = type;
-    this.customizationOptions.multiLine = type === 'multi';
-    this.customizationOptions.showLegend = type === 'multi';
-    
-    // Reset to first data set of the new type
-    if (type === 'single') {
-      this.currentDataSet = 'revenue';
-    } else {
-      this.currentDataSet = 'financial';
-    }
-    
-    this.updateChartData();
-  }
-
   // Data Management
   updateChartData() {
-    if (this.dataSetType === 'single') {
-      const selectedData = this.singleLineDataSets[this.currentDataSet as keyof typeof this.singleLineDataSets];
-      const colorScheme = this.colorSchemes[this.customizationOptions.colorScheme as keyof typeof this.colorSchemes];
-      
-      this.lineChartConfig = { 
-        ...this.lineChartConfig, 
-        data: selectedData.map((item: any, index: number) => ({
-          ...item,
-          color: colorScheme[index % colorScheme.length]
-        })),
-        multiLine: false,
-        showLegend: false
-      };
+    const selectedData = this.multiLineDataSets[this.currentDataSet as keyof typeof this.multiLineDataSets];
+    this.lineChartConfig = { 
+      ...this.lineChartConfig, 
+      data: selectedData,
+      multiLine: true,
+      showLegend: true
+    };
+  }
+
+  changeDataSet(dataSet: string) {
+    this.currentDataSet = dataSet;
+    this.updateChartData();
+    this.updateCurrentChartData();
+    
+    // Use direct chart component method to update data
+    if (this.lineChartComponent) {
+      this.lineChartComponent.updateData(this.currentChartData);
+      console.log('Line chart data updated via component method');
     } else {
-      const selectedData = this.multiLineDataSets[this.currentDataSet as keyof typeof this.multiLineDataSets];
-      this.lineChartConfig = { 
-        ...this.lineChartConfig, 
-        data: selectedData,
-        multiLine: true,
-        showLegend: true
-      };
+      this.triggerChartUpdate();
     }
   }
 
   updateCurrentChartData() {
-    if (this.dataSetType === 'single' && Array.isArray(this.lineChartConfig.data)) {
-      this.currentChartData = [...this.lineChartConfig.data];
-    } else if (this.dataSetType === 'multi') {
-      const multiData = this.lineChartConfig.data as MultiLineChartData;
-      this.currentChartData = multiData.series.length > 0 ? [...multiData.series[0].data] : [];
-    }
+    const multiData = this.lineChartConfig.data as MultiLineChartData;
+    this.currentChartData = multiData.series.length > 0 ? [...multiData.series[0].data] : [];
   }
 
   // Customization Methods
@@ -385,13 +422,6 @@ export class LineChartDemoComponent implements OnInit, OnDestroy {
     this.triggerChartUpdate();
   }
 
-  changeDataSet(dataSet: string) {
-    this.currentDataSet = dataSet;
-    this.updateChartData();
-    this.updateCurrentChartData();
-    this.triggerChartUpdate();
-  }
-
   triggerChartUpdate() {
     this.lineChartConfig = { ...this.lineChartConfig };
     this.cdr.detectChanges();
@@ -399,49 +429,10 @@ export class LineChartDemoComponent implements OnInit, OnDestroy {
 
   // Random Data Generation
   generateRandomData() {
-    if (this.dataSetType === 'single') {
-      const dataPoints = Math.floor(Math.random() * 8) + 4; // 4-11 data points
-      const colorScheme = this.colorSchemes[this.customizationOptions.colorScheme as keyof typeof this.colorSchemes];
-      
-      this.lineChartConfig = { 
-        ...this.lineChartConfig, 
-        data: Array.from({ length: dataPoints }, (_, i) => ({
-          label: `Point ${i + 1}`,
-          value: Math.floor(Math.random() * 100) + 20,
-          color: colorScheme[i % colorScheme.length]
-        })),
-        multiLine: false,
-        showLegend: false
-      };
-    } else {
-      // Generate random multi-line data
-      const dataPoints = Math.floor(Math.random() * 6) + 4; // 4-9 data points
-      const seriesCount = Math.floor(Math.random() * 3) + 2; // 2-4 series
-      const colorScheme = this.colorSchemes[this.customizationOptions.colorScheme as keyof typeof this.colorSchemes];
-      
-      const series = Array.from({ length: seriesCount }, (_, seriesIndex) => ({
-        name: `Series ${seriesIndex + 1}`,
-        data: Array.from({ length: dataPoints }, (_, i) => ({
-          label: `Point ${i + 1}`,
-          value: Math.floor(Math.random() * 100) + 20
-        })),
-        color: colorScheme[seriesIndex % colorScheme.length]
-      }));
-      
-      this.lineChartConfig = { 
-        ...this.lineChartConfig, 
-        data: {
-          series,
-          labels: Array.from({ length: dataPoints }, (_, i) => `Point ${i + 1}`)
-        },
-        multiLine: true,
-        showLegend: true
-      };
-    }
-    
-    this.updateCurrentChartData();
-    this.triggerChartUpdate();
+    // This method is no longer needed as data is static
   }
+
+
 
   // Chart Event Handlers
   onChartReady() {

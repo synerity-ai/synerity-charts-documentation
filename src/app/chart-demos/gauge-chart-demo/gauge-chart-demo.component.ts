@@ -145,6 +145,8 @@ export class GaugeChartDemoComponent implements OnInit {
     this.generateRandomValue();
   }
 
+
+
   // Method to update min value
   updateMinValue(value: number): void {
     if (value < this.gaugeChartData.max) {

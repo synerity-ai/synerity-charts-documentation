@@ -11,6 +11,52 @@ export interface ScatterChartConfig {
   showTrendLine?: boolean;
   pointRadius?: number;
   pointOpacity?: number;
+  // Enhanced features
+  trendLine?: {
+    enabled: boolean;
+    type: 'linear' | 'polynomial' | 'custom';
+    degree?: number;
+    equation?: string;
+    color?: string;
+    strokeWidth?: number;
+    opacity?: number;
+  };
+  clustering?: {
+    enabled: boolean;
+    algorithm: 'kmeans' | 'dbscan';
+    maxClusters?: number;
+    showClusterBoundaries?: boolean;
+    clusterColors?: string[];
+  };
+  mapping?: {
+    sizeField?: string;
+    colorField?: string;
+    shapeField?: string;
+    sizeRange?: [number, number];
+    colorScale?: 'sequential' | 'diverging' | 'categorical';
+  };
+  selection?: {
+    enabled: boolean;
+    type: 'lasso' | 'rectangle' | 'point';
+    multipleSelection?: boolean;
+    selectionColor?: string;
+  };
+  zoom?: {
+    enabled: boolean;
+    minZoom: number;
+    maxZoom: number;
+    enablePan?: boolean;
+  };
+  tooltip?: {
+    enabled: boolean;
+    format?: (data: ScatterData) => string;
+    showAllFields?: boolean;
+  };
+  animation?: {
+    duration: number;
+    easing: string;
+    entranceDelay?: number;
+  };
 }
 
 @Component({

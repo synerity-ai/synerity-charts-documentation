@@ -107,6 +107,8 @@ export class SankeyChartDemoComponent implements OnInit {
     this.sankeyChartData = this.sampleDataSets[this.currentDataSet as keyof typeof this.sampleDataSets];
   }
 
+
+
   // Method to toggle values display
   toggleShowValues(): void {
     this.customizationOptions.showValues = !this.customizationOptions.showValues;

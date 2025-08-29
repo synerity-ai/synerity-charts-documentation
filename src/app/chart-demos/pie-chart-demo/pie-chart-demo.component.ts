@@ -25,7 +25,35 @@ export class PieChartDemoComponent implements OnInit {
     showValues: true,
     innerRadius: 0,
     outerRadius: 0.6,
-    labelRadius: 0.8
+    labelRadius: 0.8,
+    // Enhanced features
+    variant: 'pie',
+    labels: {
+      enabled: true,
+      position: 'outside',
+      format: '{label}: {value}',
+      fontSize: 12,
+      fontWeight: '500'
+    },
+    animation: {
+      duration: 800,
+      easing: 'cubic',
+      explodeOnClick: true,
+      entranceDelay: 100
+    },
+    legend: {
+      interactive: true,
+      position: 'right',
+      showValues: true,
+      showPercentages: true
+    },
+    interactivity: {
+      hoverEffects: true,
+      clickToExplode: true,
+      tooltipEnabled: true,
+      tooltipFormat: (data: ChartData) => 
+        `${data.label}: ${data.value.toLocaleString()} (${((data.value / this.getTotalValue()) * 100).toFixed(1)}%)`
+    }
   };
 
   // Customization options
@@ -37,7 +65,22 @@ export class PieChartDemoComponent implements OnInit {
     showValues: true,
     innerRadius: 0,
     explodeOffset: 10,
-    colorScheme: 'default'
+    colorScheme: 'default',
+    // Enhanced options
+    variant: 'pie',
+    labelPosition: 'outside',
+    labelFormat: '{label}: {value}',
+    fontSize: 12,
+    fontWeight: '500',
+    animationDuration: 800,
+    animationEasing: 'cubic',
+    explodeOnClick: true,
+    legendInteractive: true,
+    legendPosition: 'right',
+    legendShowValues: true,
+    legendShowPercentages: true,
+    hoverEffects: true,
+    tooltipEnabled: true
   };
 
   // Color schemes
@@ -67,6 +110,13 @@ export class PieChartDemoComponent implements OnInit {
       { label: 'Europe', value: 30, color: '#10B981' },
       { label: 'Asia', value: 20, color: '#F59E0B' },
       { label: 'Other', value: 10, color: '#EF4444' }
+    ],
+    revenue: [
+      { label: 'Product A', value: 1200000, color: '#3B82F6' },
+      { label: 'Product B', value: 800000, color: '#10B981' },
+      { label: 'Product C', value: 600000, color: '#F59E0B' },
+      { label: 'Product D', value: 400000, color: '#EF4444' },
+      { label: 'Product E', value: 200000, color: '#8B5CF6' }
     ]
   };
 
@@ -95,7 +145,7 @@ export class PieChartDemoComponent implements OnInit {
     this.currentChartData = [...this.pieChartConfig.data];
   }
 
-  // Customization Methods
+  // Enhanced Customization Methods
   updateWidth(value: number) {
     this.customizationOptions.width = value;
     this.pieChartConfig.width = value;
@@ -151,6 +201,119 @@ export class PieChartDemoComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
+  // New Enhanced Methods
+  setVariant(variant: string) {
+    if (variant === 'pie' || variant === 'donut') {
+      this.customizationOptions.variant = variant as 'pie' | 'donut';
+      this.pieChartConfig.variant = variant as 'pie' | 'donut';
+      this.cdr.detectChanges();
+    }
+  }
+
+  setLabelPosition(position: 'inside' | 'outside' | 'callout') {
+    this.customizationOptions.labelPosition = position;
+    if (this.pieChartConfig.labels) {
+      this.pieChartConfig.labels.position = position;
+    }
+    this.cdr.detectChanges();
+  }
+
+  setLabelFormat(format: string) {
+    this.customizationOptions.labelFormat = format;
+    if (this.pieChartConfig.labels) {
+      this.pieChartConfig.labels.format = format;
+    }
+    this.cdr.detectChanges();
+  }
+
+  setFontSize(size: number) {
+    this.customizationOptions.fontSize = size;
+    if (this.pieChartConfig.labels) {
+      this.pieChartConfig.labels.fontSize = size;
+    }
+    this.cdr.detectChanges();
+  }
+
+  setFontWeight(weight: string) {
+    this.customizationOptions.fontWeight = weight;
+    if (this.pieChartConfig.labels) {
+      this.pieChartConfig.labels.fontWeight = weight;
+    }
+    this.cdr.detectChanges();
+  }
+
+  setAnimationDuration(duration: number) {
+    this.customizationOptions.animationDuration = duration;
+    if (this.pieChartConfig.animation) {
+      this.pieChartConfig.animation.duration = duration;
+    }
+    this.cdr.detectChanges();
+  }
+
+  setAnimationEasing(easing: string) {
+    this.customizationOptions.animationEasing = easing;
+    if (this.pieChartConfig.animation) {
+      this.pieChartConfig.animation.easing = easing;
+    }
+    this.cdr.detectChanges();
+  }
+
+  toggleExplodeOnClick() {
+    this.customizationOptions.explodeOnClick = !this.customizationOptions.explodeOnClick;
+    if (this.pieChartConfig.animation) {
+      this.pieChartConfig.animation.explodeOnClick = this.customizationOptions.explodeOnClick;
+    }
+    this.cdr.detectChanges();
+  }
+
+  toggleLegendInteractive() {
+    this.customizationOptions.legendInteractive = !this.customizationOptions.legendInteractive;
+    if (this.pieChartConfig.legend) {
+      this.pieChartConfig.legend.interactive = this.customizationOptions.legendInteractive;
+    }
+    this.cdr.detectChanges();
+  }
+
+  setLegendPosition(position: 'top' | 'bottom' | 'left' | 'right') {
+    this.customizationOptions.legendPosition = position;
+    if (this.pieChartConfig.legend) {
+      this.pieChartConfig.legend.position = position;
+    }
+    this.cdr.detectChanges();
+  }
+
+  toggleLegendShowValues() {
+    this.customizationOptions.legendShowValues = !this.customizationOptions.legendShowValues;
+    if (this.pieChartConfig.legend) {
+      this.pieChartConfig.legend.showValues = this.customizationOptions.legendShowValues;
+    }
+    this.cdr.detectChanges();
+  }
+
+  toggleLegendShowPercentages() {
+    this.customizationOptions.legendShowPercentages = !this.customizationOptions.legendShowPercentages;
+    if (this.pieChartConfig.legend) {
+      this.pieChartConfig.legend.showPercentages = this.customizationOptions.legendShowPercentages;
+    }
+    this.cdr.detectChanges();
+  }
+
+  toggleHoverEffects() {
+    this.customizationOptions.hoverEffects = !this.customizationOptions.hoverEffects;
+    if (this.pieChartConfig.interactivity) {
+      this.pieChartConfig.interactivity.hoverEffects = this.customizationOptions.hoverEffects;
+    }
+    this.cdr.detectChanges();
+  }
+
+  toggleTooltip() {
+    this.customizationOptions.tooltipEnabled = !this.customizationOptions.tooltipEnabled;
+    if (this.pieChartConfig.interactivity) {
+      this.pieChartConfig.interactivity.tooltipEnabled = this.customizationOptions.tooltipEnabled;
+    }
+    this.cdr.detectChanges();
+  }
+
   // Random Data Generation
   generateRandomData() {
     const dataPoints = Math.floor(Math.random() * 6) + 3; // 3-8 data points
@@ -165,6 +328,8 @@ export class PieChartDemoComponent implements OnInit {
     this.updateCurrentChartData();
     this.cdr.detectChanges();
   }
+
+
 
   // Export Methods
   async exportChart(format: 'png' | 'svg') {

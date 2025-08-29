@@ -12,6 +12,33 @@ export interface PieChartConfig {
   innerRadius?: number;
   outerRadius?: number;
   labelRadius?: number;
+  // Enhanced features
+  variant?: 'pie' | 'donut';
+  labels?: {
+    enabled: boolean;
+    position: 'inside' | 'outside' | 'callout';
+    format: string;
+    fontSize?: number;
+    fontWeight?: string;
+  };
+  animation?: {
+    duration: number;
+    easing: string;
+    explodeOnClick: boolean;
+    entranceDelay?: number;
+  };
+  legend?: {
+    interactive: boolean;
+    position: 'top' | 'bottom' | 'left' | 'right';
+    showValues?: boolean;
+    showPercentages?: boolean;
+  };
+  interactivity?: {
+    hoverEffects: boolean;
+    clickToExplode: boolean;
+    tooltipEnabled: boolean;
+    tooltipFormat?: (data: ChartData) => string;
+  };
 }
 
 @Component({

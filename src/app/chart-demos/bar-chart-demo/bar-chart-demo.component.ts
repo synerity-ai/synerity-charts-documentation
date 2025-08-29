@@ -209,7 +209,14 @@ export class BarChartDemoComponent implements OnInit, OnDestroy {
     this.customizationOptions.colorScheme = scheme;
     this.updateChartData();
     this.updateCurrentChartData();
-    this.triggerChartUpdate();
+    
+    // Use direct chart component method to update data
+    if (this.barChartComponent) {
+      this.barChartComponent.updateData(this.barChartConfig.data);
+      console.log('Bar chart color scheme updated via component method');
+    } else {
+      this.triggerChartUpdate();
+    }
   }
 
   changeDataSet(dataSet: string) {
@@ -217,7 +224,14 @@ export class BarChartDemoComponent implements OnInit, OnDestroy {
     this.currentDataSet = dataSet;
     this.updateChartData();
     this.updateCurrentChartData();
-    this.triggerChartUpdate();
+    
+    // Use direct chart component method to update data
+    if (this.barChartComponent) {
+      this.barChartComponent.updateData(this.barChartConfig.data);
+      console.log('Bar chart data updated via component method');
+    } else {
+      this.triggerChartUpdate();
+    }
   }
 
   // Helper method to trigger chart updates
@@ -253,6 +267,8 @@ export class BarChartDemoComponent implements OnInit, OnDestroy {
     this.updateCurrentChartData();
     this.triggerChartUpdate();
   }
+
+
 
   // Chart Event Handlers
   onChartReady() {

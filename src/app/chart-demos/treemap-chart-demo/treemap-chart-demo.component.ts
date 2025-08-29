@@ -185,6 +185,8 @@ export class TreemapChartDemoComponent implements OnInit {
     this.treemapChartData = this.sampleDataSets[this.currentDataSet];
   }
 
+
+
   // Method to toggle labels display
   toggleShowLabels(): void {
     this.customizationOptions.showLabels = !this.customizationOptions.showLabels;

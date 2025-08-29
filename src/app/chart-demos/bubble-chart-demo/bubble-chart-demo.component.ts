@@ -81,6 +81,8 @@ export class BubbleChartDemoComponent implements OnInit {
     }));
   }
 
+
+
   updateCurrentChartData() {
     this.currentChartData = [...this.bubbleChartData];
   }

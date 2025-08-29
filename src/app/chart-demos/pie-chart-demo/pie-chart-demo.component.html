@@ -11,7 +11,7 @@
         </div>
         <div class="flex items-center space-x-3">
           <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-orange-100 text-orange-800">
-            Pie Chart
+            Enhanced Pie Chart
           </span>
         </div>
       </div>
@@ -41,6 +41,7 @@
               </svg>
               Generate Random Data
             </button>
+            
             <button (click)="exportChart('png')" class="btn-secondary">
               <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
@@ -98,12 +99,27 @@
           <h3 class="text-sm font-semibold text-neutral-900 mb-3">Data Set</h3>
           <div class="space-y-2">
             <button 
-              *ngFor="let dataSet of ['devices', 'revenue', 'users']"
+              *ngFor="let dataSet of ['devices', 'browsers', 'regions', 'revenue']"
               (click)="changeDataSet(dataSet)"
               [class]="currentDataSet === dataSet 
                 ? 'w-full text-left px-3 py-2 rounded-lg bg-orange-50 border border-orange-200 text-orange-700 text-sm' 
                 : 'w-full text-left px-3 py-2 rounded-lg text-neutral-600 hover:bg-neutral-50 text-sm'">
               {{ dataSet | titlecase }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Chart Variant -->
+        <div class="bg-white rounded-lg border border-neutral-200 p-4">
+          <h3 class="text-sm font-semibold text-neutral-900 mb-3">Chart Variant</h3>
+          <div class="space-y-2">
+            <button 
+              *ngFor="let variant of ['pie', 'donut']"
+              (click)="setVariant(variant)"
+              [class]="customizationOptions.variant === variant 
+                ? 'w-full text-left px-3 py-2 rounded-lg bg-orange-50 border border-orange-200 text-orange-700 text-sm' 
+                : 'w-full text-left px-3 py-2 rounded-lg text-neutral-600 hover:bg-neutral-50 text-sm'">
+              {{ variant | titlecase }}
             </button>
           </div>
         </div>
@@ -152,9 +168,63 @@
           </div>
         </div>
 
-        <!-- Chart Options -->
+        <!-- Label Customization -->
         <div class="bg-white rounded-lg border border-neutral-200 p-4">
-          <h3 class="text-sm font-semibold text-neutral-900 mb-3">Chart Options</h3>
+          <h3 class="text-sm font-semibold text-neutral-900 mb-3">Label Customization</h3>
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-medium text-neutral-700 mb-1">Position</label>
+              <select 
+                [value]="customizationOptions.labelPosition"
+                (change)="setLabelPosition($any($event.target).value)"
+                class="w-full text-sm border border-neutral-300 rounded-md px-2 py-1">
+                <option value="inside">Inside</option>
+                <option value="outside">Outside</option>
+                <option value="callout">Callout</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-neutral-700 mb-1">Format</label>
+              <select 
+                [value]="customizationOptions.labelFormat"
+                (change)="setLabelFormat($any($event.target).value)"
+                class="w-full text-sm border border-neutral-300 rounded-md px-2 py-1">
+                <option value="{label}: {value}">Label: Value</option>
+                <option value="{label} ({percentage}%)">Label (Percentage)</option>
+                <option value="{value}">Value Only</option>
+                <option value="{label}">Label Only</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-neutral-700 mb-1">Font Size: {{ customizationOptions.fontSize }}px</label>
+              <input 
+                type="range" 
+                min="8" 
+                max="20" 
+                step="1"
+                [value]="customizationOptions.fontSize"
+                (input)="setFontSize(+($any($event.target).value))"
+                class="w-full h-2 bg-neutral-200 rounded-lg appearance-none cursor-pointer">
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-neutral-700 mb-1">Font Weight</label>
+              <select 
+                [value]="customizationOptions.fontWeight"
+                (change)="setFontWeight($any($event.target).value)"
+                class="w-full text-sm border border-neutral-300 rounded-md px-2 py-1">
+                <option value="300">Light</option>
+                <option value="400">Normal</option>
+                <option value="500">Medium</option>
+                <option value="600">Semi Bold</option>
+                <option value="700">Bold</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Animation Settings -->
+        <div class="bg-white rounded-lg border border-neutral-200 p-4">
+          <h3 class="text-sm font-semibold text-neutral-900 mb-3">Animation Settings</h3>
           <div class="space-y-3">
             <label class="flex items-center">
               <input 
@@ -162,8 +232,112 @@
                 [checked]="customizationOptions.animate"
                 (change)="toggleAnimation()"
                 class="rounded border-neutral-300 text-orange-600 focus:ring-orange-500">
-              <span class="ml-2 text-sm text-neutral-700">Animation</span>
+              <span class="ml-2 text-sm text-neutral-700">Enable Animation</span>
             </label>
+            <div>
+              <label class="block text-xs font-medium text-neutral-700 mb-1">Duration: {{ customizationOptions.animationDuration }}ms</label>
+              <input 
+                type="range" 
+                min="200" 
+                max="2000" 
+                step="100"
+                [value]="customizationOptions.animationDuration"
+                (input)="setAnimationDuration(+($any($event.target).value))"
+                class="w-full h-2 bg-neutral-200 rounded-lg appearance-none cursor-pointer">
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-neutral-700 mb-1">Easing</label>
+              <select 
+                [value]="customizationOptions.animationEasing"
+                (change)="setAnimationEasing($any($event.target).value)"
+                class="w-full text-sm border border-neutral-300 rounded-md px-2 py-1">
+                <option value="linear">Linear</option>
+                <option value="cubic">Cubic</option>
+                <option value="elastic">Elastic</option>
+                <option value="bounce">Bounce</option>
+              </select>
+            </div>
+            <label class="flex items-center">
+              <input 
+                type="checkbox" 
+                [checked]="customizationOptions.explodeOnClick"
+                (change)="toggleExplodeOnClick()"
+                class="rounded border-neutral-300 text-orange-600 focus:ring-orange-500">
+              <span class="ml-2 text-sm text-neutral-700">Explode on Click</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Legend Options -->
+        <div class="bg-white rounded-lg border border-neutral-200 p-4">
+          <h3 class="text-sm font-semibold text-neutral-900 mb-3">Legend Options</h3>
+          <div class="space-y-3">
+            <label class="flex items-center">
+              <input 
+                type="checkbox" 
+                [checked]="customizationOptions.legendInteractive"
+                (change)="toggleLegendInteractive()"
+                class="rounded border-neutral-300 text-orange-600 focus:ring-orange-500">
+              <span class="ml-2 text-sm text-neutral-700">Interactive Legend</span>
+            </label>
+            <div>
+              <label class="block text-xs font-medium text-neutral-700 mb-1">Position</label>
+              <select 
+                [value]="customizationOptions.legendPosition"
+                (change)="setLegendPosition($any($event.target).value)"
+                class="w-full text-sm border border-neutral-300 rounded-md px-2 py-1">
+                <option value="top">Top</option>
+                <option value="bottom">Bottom</option>
+                <option value="left">Left</option>
+                <option value="right">Right</option>
+              </select>
+            </div>
+            <label class="flex items-center">
+              <input 
+                type="checkbox" 
+                [checked]="customizationOptions.legendShowValues"
+                (change)="toggleLegendShowValues()"
+                class="rounded border-neutral-300 text-orange-600 focus:ring-orange-500">
+              <span class="ml-2 text-sm text-neutral-700">Show Values</span>
+            </label>
+            <label class="flex items-center">
+              <input 
+                type="checkbox" 
+                [checked]="customizationOptions.legendShowPercentages"
+                (change)="toggleLegendShowPercentages()"
+                class="rounded border-neutral-300 text-orange-600 focus:ring-orange-500">
+              <span class="ml-2 text-sm text-neutral-700">Show Percentages</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Interactivity -->
+        <div class="bg-white rounded-lg border border-neutral-200 p-4">
+          <h3 class="text-sm font-semibold text-neutral-900 mb-3">Interactivity</h3>
+          <div class="space-y-3">
+            <label class="flex items-center">
+              <input 
+                type="checkbox" 
+                [checked]="customizationOptions.hoverEffects"
+                (change)="toggleHoverEffects()"
+                class="rounded border-neutral-300 text-orange-600 focus:ring-orange-500">
+              <span class="ml-2 text-sm text-neutral-700">Hover Effects</span>
+            </label>
+            <label class="flex items-center">
+              <input 
+                type="checkbox" 
+                [checked]="customizationOptions.tooltipEnabled"
+                (change)="toggleTooltip()"
+                class="rounded border-neutral-300 text-orange-600 focus:ring-orange-500">
+              <span class="ml-2 text-sm text-neutral-700">Tooltips</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Chart Options -->
+        <div class="bg-white rounded-lg border border-neutral-200 p-4">
+          <h3 class="text-sm font-semibold text-neutral-900 mb-3">Chart Options</h3>
+          <div class="space-y-3">
             <label class="flex items-center">
               <input 
                 type="checkbox" 

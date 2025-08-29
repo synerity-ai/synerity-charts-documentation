@@ -1,5 +1,6 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { ChartData, AreaChartOptions } from '@synerity/charts';
+import { AreaChartComponent } from '../../charts/area-chart/area-chart.component';
 
 @Component({
   selector: 'app-area-chart-demo',
@@ -8,6 +9,8 @@ import { ChartData, AreaChartOptions } from '@synerity/charts';
   standalone: false
 })
 export class AreaChartDemoComponent implements OnInit {
+  @ViewChild(AreaChartComponent) areaChartComponent!: AreaChartComponent;
+  
   // Sample data for area chart
   areaChartData: ChartData[] = [
     { label: 'Jan', value: 65, color: '#3B82F6' },
@@ -31,7 +34,27 @@ export class AreaChartDemoComponent implements OnInit {
     curveType: 'monotoneX',
     strokeWidth: 2,
     pointRadius: 4,
-    areaOpacity: 0.3
+    areaOpacity: 0.3,
+    // Enhanced features
+    gradient: {
+      enabled: false,
+      type: 'linear',
+      colors: ['#3B82F6', '#1E40AF']
+    },
+    zoom: {
+      enabled: false,
+      minZoom: 0.5,
+      maxZoom: 5
+    },
+    tooltip: {
+      enabled: true,
+      format: (data: ChartData) => `${data.label}: ${data.value}`
+    },
+    animation: {
+      duration: 1000,
+      easing: 'cubic-out',
+      delay: 0
+    }
   };
 
   // Customization options
@@ -46,7 +69,13 @@ export class AreaChartDemoComponent implements OnInit {
     strokeWidth: 2,
     pointRadius: 4,
     areaOpacity: 0.3,
-    colorScheme: 'default'
+    colorScheme: 'default',
+    // Enhanced features
+    gradientEnabled: false,
+    zoomEnabled: false,
+    tooltipEnabled: true,
+    animationDuration: 1000,
+    animationEasing: 'cubic-out'
   };
 
   // Color schemes
@@ -112,6 +141,18 @@ export class AreaChartDemoComponent implements OnInit {
     this.updateCurrentChartData();
   }
 
+  ngAfterViewInit(): void {
+    // Ensure chart is properly initialized after view is ready
+    setTimeout(() => {
+      if (this.areaChartComponent) {
+        console.log('Area chart component found, initializing...');
+        this.areaChartComponent.resizeChart();
+      } else {
+        console.warn('Area chart component not found');
+      }
+    }, 500);
+  }
+
   // Data Management
   updateChartData() {
     const selectedData = this.sampleDataSets[this.currentDataSet as keyof typeof this.sampleDataSets];
@@ -121,6 +162,13 @@ export class AreaChartDemoComponent implements OnInit {
       ...item,
       color: colorScheme[index % colorScheme.length]
     }));
+    
+    this.updateCurrentChartData();
+    
+    // Update the chart component with new data
+    if (this.areaChartComponent) {
+      this.areaChartComponent.updateChart(this.areaChartData);
+    }
   }
 
   updateCurrentChartData() {
@@ -133,6 +181,13 @@ export class AreaChartDemoComponent implements OnInit {
       ...item,
       value: Math.floor(Math.random() * 100) + 20
     }));
+    
+    this.updateCurrentChartData();
+    
+    // Update the chart component with new data
+    if (this.areaChartComponent) {
+      this.areaChartComponent.updateChart(this.areaChartData);
+    }
   }
 
   // Method to change curve type
@@ -248,7 +303,118 @@ export class AreaChartDemoComponent implements OnInit {
     this.currentDataSet = dataSet;
     this.updateChartData();
     this.updateCurrentChartData();
+    
+    // Use direct chart component method to update data
+    if (this.areaChartComponent) {
+      this.areaChartComponent.updateChart(this.areaChartData);
+      console.log('Area chart data updated via component method');
+    } else {
+      this.cdr.detectChanges();
+    }
+  }
+
+  // Enhanced feature methods
+  toggleGradient(): void {
+    const newEnabled = !this.areaChartConfig.gradient?.enabled;
+    this.areaChartConfig = {
+      ...this.areaChartConfig,
+      gradient: {
+        ...this.areaChartConfig.gradient!,
+        enabled: newEnabled
+      }
+    };
+    
+    // Call the chart component method
+    if (this.areaChartComponent) {
+      if (newEnabled) {
+        this.areaChartComponent.enableGradient();
+      } else {
+        this.areaChartComponent.disableGradient();
+      }
+    }
+    
     this.cdr.detectChanges();
+  }
+
+  toggleZoom(): void {
+    const newEnabled = !this.areaChartConfig.zoom?.enabled;
+    this.areaChartConfig = {
+      ...this.areaChartConfig,
+      zoom: {
+        ...this.areaChartConfig.zoom!,
+        enabled: newEnabled
+      }
+    };
+    
+    // Call the chart component method
+    if (this.areaChartComponent) {
+      if (newEnabled) {
+        this.areaChartComponent.enableZoom();
+      } else {
+        this.areaChartComponent.disableZoom();
+      }
+    }
+    
+    this.cdr.detectChanges();
+  }
+
+  toggleTooltip(): void {
+    const newEnabled = !this.areaChartConfig.tooltip?.enabled;
+    this.areaChartConfig = {
+      ...this.areaChartConfig,
+      tooltip: {
+        ...this.areaChartConfig.tooltip!,
+        enabled: newEnabled
+      }
+    };
+    this.cdr.detectChanges();
+  }
+
+  updateAnimationDuration(duration: number): void {
+    this.areaChartConfig = {
+      ...this.areaChartConfig,
+      animation: {
+        ...this.areaChartConfig.animation!,
+        duration
+      }
+    };
+    
+    // Call the chart component method
+    if (this.areaChartComponent) {
+      this.areaChartComponent.setAnimation(duration, this.areaChartConfig.animation?.easing || 'cubic-out');
+    }
+    
+    this.cdr.detectChanges();
+  }
+
+  changeAnimationEasing(easing: string): void {
+    this.areaChartConfig = {
+      ...this.areaChartConfig,
+      animation: {
+        ...this.areaChartConfig.animation!,
+        easing
+      }
+    };
+    
+    // Call the chart component method
+    if (this.areaChartComponent) {
+      this.areaChartComponent.setAnimation(this.areaChartConfig.animation?.duration || 1000, easing);
+    }
+    
+    this.cdr.detectChanges();
+  }
+
+  resetZoom(): void {
+    if (this.areaChartComponent) {
+      this.areaChartComponent.resetZoom();
+    }
+  }
+
+  // Force chart re-initialization
+  reinitializeChart(): void {
+    if (this.areaChartComponent) {
+      this.areaChartComponent.resizeChart();
+    }
   }
 
   // Method to generate random data
@@ -263,8 +429,16 @@ export class AreaChartDemoComponent implements OnInit {
     }));
     
     this.updateCurrentChartData();
+    
+    // Update the chart component with new data
+    if (this.areaChartComponent) {
+      this.areaChartComponent.updateChart(this.areaChartData);
+    }
+    
     this.cdr.detectChanges();
   }
+
+
 
   // Export Methods
   async exportChart(format: 'png' | 'svg') {
