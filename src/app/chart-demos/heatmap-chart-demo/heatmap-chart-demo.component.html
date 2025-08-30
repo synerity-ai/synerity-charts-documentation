@@ -20,14 +20,6 @@
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
       <!-- Chart Display -->
       <div class="lg:col-span-3 space-y-6">
-        <!-- Chart Component -->
-        <div class="chart-container">
-          <app-heatmap-chart 
-            [data]="heatmapChartData" 
-            [options]="heatmapChartConfig">
-          </app-heatmap-chart>
-        </div>
-
         <!-- Quick Actions -->
         <div class="chart-container">
           <h3 class="text-lg font-semibold text-neutral-900 mb-4">Quick Actions</h3>
@@ -45,6 +37,14 @@
               Export PNG
             </button>
           </div>
+        </div>
+
+        <!-- Chart Component -->
+        <div class="chart-container">
+          <app-heatmap-chart 
+            [data]="heatmapChartData" 
+            [options]="heatmapChartConfig">
+          </app-heatmap-chart>
         </div>
 
         <!-- Data Set Selector -->
