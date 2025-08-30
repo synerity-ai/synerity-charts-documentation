@@ -1,0 +1,299 @@
+<div class="min-h-screen bg-neutral-50">
+  <div class="max-w-7xl mx-auto px-6 py-8">
+    <!-- Header Section -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold text-neutral-900 mb-2">Area Chart</h1>
+          <p class="text-lg text-neutral-600">
+            Interactive area chart component with comprehensive customization options and trend analysis.
+          </p>
+        </div>
+        <div class="flex items-center space-x-3">
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800">
+            Area Chart
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="mb-8">
+      <nav class="flex space-x-8 border-b border-neutral-200">
+        <button
+          (click)="setActiveTab('demo')"
+          [class]="activeTab === 'demo' 
+            ? 'border-b-2 border-indigo-500 text-indigo-600 px-1 py-4 text-sm font-medium' 
+            : 'text-neutral-500 hover:text-neutral-700 hover:border-neutral-300 px-1 py-4 text-sm font-medium border-b-2 border-transparent'">
+          Demo
+        </button>
+        <button
+          (click)="setActiveTab('documentation')"
+          [class]="activeTab === 'documentation' 
+            ? 'border-b-2 border-indigo-500 text-indigo-600 px-1 py-4 text-sm font-medium' 
+            : 'text-neutral-500 hover:text-neutral-700 hover:border-neutral-300 px-1 py-4 text-sm font-medium border-b-2 border-transparent'">
+          Documentation
+        </button>
+        <button
+          (click)="setActiveTab('how-to-use')"
+          [class]="activeTab === 'how-to-use' 
+            ? 'border-b-2 border-indigo-500 text-indigo-600 px-1 py-4 text-sm font-medium' 
+            : 'text-neutral-500 hover:text-neutral-700 hover:border-neutral-300 px-1 py-4 text-sm font-medium border-b-2 border-transparent'">
+          How To Use
+        </button>
+      </nav>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+      <!-- Demo Tab -->
+      <div *ngIf="activeTab === 'demo'" class="animate-fade-in">
+        <app-area-chart-demo></app-area-chart-demo>
+      </div>
+
+      <!-- Documentation Tab -->
+      <div *ngIf="activeTab === 'documentation'" class="animate-fade-in">
+        <div class="space-y-8">
+          <!-- Overview Section -->
+          <div class="bg-white rounded-lg border border-neutral-200 p-8">
+            <div class="flex items-center mb-6">
+              <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mr-4">
+                <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
+                </svg>
+              </div>
+              <div>
+                <h2 class="text-2xl font-bold text-neutral-900">Area Chart Documentation</h2>
+                <p class="text-neutral-600 mt-1">Complete API reference and implementation guide</p>
+              </div>
+            </div>
+
+            <!-- Features Overview -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-lg p-6">
+                <div class="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center mb-3">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                  </svg>
+                </div>
+                <h4 class="font-semibold text-neutral-900 mb-2">High Performance</h4>
+                <p class="text-sm text-neutral-600">Built with D3.js for smooth animations and efficient rendering of large datasets.</p>
+              </div>
+              
+              <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-6">
+                <div class="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center mb-3">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+                  </svg>
+                </div>
+                <h4 class="font-semibold text-neutral-900 mb-2">Highly Customizable</h4>
+                <p class="text-sm text-neutral-600">Extensive configuration options for colors, animations, styling, and behavior.</p>
+              </div>
+              
+              <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-6">
+                <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center mb-3">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                  </svg>
+                </div>
+                <h4 class="font-semibold text-neutral-900 mb-2">Type Safe</h4>
+                <p class="text-sm text-neutral-600">Full TypeScript support with comprehensive type definitions and IntelliSense.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- API Reference -->
+          <div class="bg-white rounded-lg border border-neutral-200 p-8">
+            <div class="flex items-center mb-6">
+              <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center mr-4">
+                <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                </svg>
+              </div>
+              <h3 class="text-xl font-semibold text-neutral-900">API Reference</h3>
+            </div>
+            
+            <!-- Configuration -->
+            <div class="mb-8">
+              <h4 class="text-lg font-medium text-neutral-900 mb-4 flex items-center">
+                <span class="w-2 h-2 bg-indigo-500 rounded-full mr-3"></span>
+                Configuration Interface
+              </h4>
+              <div class="bg-gradient-to-r from-neutral-50 to-indigo-50 rounded-lg p-6 overflow-x-auto border border-neutral-200">
+                <pre class="text-sm text-neutral-800"><code>interface AreaChartConfig &#123;
+  data: AreaData[];
+  width?: number;
+  height?: number;
+  animate?: boolean;
+  showGrid?: boolean;
+  showAxes?: boolean;
+  gradient?: boolean;
+  colors?: string[];
+  xAxisLabel?: string;
+  yAxisLabel?: string;
+&#125;</code></pre>
+              </div>
+            </div>
+
+            <!-- Data Structure -->
+            <div class="mb-8">
+              <h4 class="text-lg font-medium text-neutral-900 mb-4 flex items-center">
+                <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
+                Data Structure
+              </h4>
+              <div class="bg-gradient-to-r from-neutral-50 to-green-50 rounded-lg p-6 overflow-x-auto border border-neutral-200">
+                <pre class="text-sm text-neutral-800"><code>interface AreaData &#123;
+  x: number | string;
+  y: number;
+  label?: string;
+  color?: string;
+&#125;</code></pre>
+              </div>
+            </div>
+
+            <!-- Properties Table -->
+            <div class="mb-8">
+              <h4 class="text-lg font-medium text-neutral-900 mb-4 flex items-center">
+                <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+                Properties Reference
+              </h4>
+              <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-neutral-200 border border-neutral-200 rounded-lg">
+                  <thead class="bg-neutral-50">
+                    <tr>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Property</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Type</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Default</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody class="bg-white divide-y divide-neutral-200">
+                    <tr class="hover:bg-neutral-50">
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <code class="text-sm font-medium text-indigo-600 bg-indigo-50 px-2 py-1 rounded">data</code>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-600">AreaData[]</td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-600">Required</td>
+                      <td class="px-6 py-4 text-sm text-neutral-600">Array of data points for the area chart</td>
+                    </tr>
+                    <tr class="hover:bg-neutral-50">
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <code class="text-sm font-medium text-indigo-600 bg-indigo-50 px-2 py-1 rounded">width</code>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-600">number</td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-600">600</td>
+                      <td class="px-6 py-4 text-sm text-neutral-600">Width of the chart in pixels</td>
+                    </tr>
+                    <tr class="hover:bg-neutral-50">
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <code class="text-sm font-medium text-indigo-600 bg-indigo-50 px-2 py-1 rounded">height</code>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-600">number</td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-600">400</td>
+                      <td class="px-6 py-4 text-sm text-neutral-600">Height of the chart in pixels</td>
+                    </tr>
+                    <tr class="hover:bg-neutral-50">
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <code class="text-sm font-medium text-indigo-600 bg-indigo-50 px-2 py-1 rounded">animate</code>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-600">boolean</td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-600">true</td>
+                      <td class="px-6 py-4 text-sm text-neutral-600">Enable or disable chart animations</td>
+                    </tr>
+                    <tr class="hover:bg-neutral-50">
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <code class="text-sm font-medium text-indigo-600 bg-indigo-50 px-2 py-1 rounded">gradient</code>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-600">boolean</td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-600">true</td>
+                      <td class="px-6 py-4 text-sm text-neutral-600">Enable gradient fill for the area</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- How To Use Tab -->
+      <div *ngIf="activeTab === 'how-to-use'" class="animate-fade-in">
+        <div class="space-y-8">
+          <div class="bg-white rounded-lg border border-neutral-200 p-8">
+            <div class="flex items-center mb-6">
+              <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mr-4">
+                <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                </svg>
+              </div>
+              <div>
+                <h2 class="text-2xl font-bold text-neutral-900">How To Use Area Chart</h2>
+                <p class="text-neutral-600 mt-1">Complete implementation guide and usage examples</p>
+              </div>
+            </div>
+            
+            <div class="space-y-8">
+              <!-- Installation -->
+              <div>
+                <h3 class="text-lg font-semibold text-neutral-900 mb-4 flex items-center">
+                  <span class="w-2 h-2 bg-indigo-500 rounded-full mr-3"></span>
+                  Installation
+                </h3>
+                <div class="bg-gradient-to-r from-neutral-50 to-indigo-50 rounded-lg p-6 border border-neutral-200">
+                  <pre class="text-sm text-neutral-800"><code>npm install synerity-charts</code></pre>
+                </div>
+              </div>
+
+              <!-- Basic Usage -->
+              <div>
+                <h3 class="text-lg font-semibold text-neutral-900 mb-4 flex items-center">
+                  <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
+                  Basic Usage
+                </h3>
+                <div class="bg-gradient-to-r from-neutral-50 to-green-50 rounded-lg p-6 border border-neutral-200">
+                  <p class="text-sm text-neutral-800">Import the AreaChartModule in your Angular module.</p>
+                </div>
+              </div>
+
+              <!-- Component Usage -->
+              <div>
+                <h3 class="text-lg font-semibold text-neutral-900 mb-4 flex items-center">
+                  <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+                  Component Usage
+                </h3>
+                <div class="bg-gradient-to-r from-neutral-50 to-blue-50 rounded-lg p-6 border border-neutral-200">
+                  <pre class="text-sm text-neutral-800"><code>&lt;app-area-chart
+  [data]="areaData"
+  [config]="areaConfig"&gt;
+&lt;/app-area-chart&gt;</code></pre>
+                </div>
+              </div>
+
+              <!-- Data Example -->
+              <div>
+                <h3 class="text-lg font-semibold text-neutral-900 mb-4 flex items-center">
+                  <span class="w-2 h-2 bg-orange-500 rounded-full mr-3"></span>
+                  Data Example
+                </h3>
+                <div class="bg-gradient-to-r from-neutral-50 to-orange-50 rounded-lg p-6 border border-neutral-200">
+                  <p class="text-sm text-neutral-800">Provide data in the following format: Array of objects with x, y coordinates.</p>
+                </div>
+              </div>
+
+              <!-- Configuration Example -->
+              <div>
+                <h3 class="text-lg font-semibold text-neutral-900 mb-4 flex items-center">
+                  <span class="w-2 h-2 bg-red-500 rounded-full mr-3"></span>
+                  Configuration Example
+                </h3>
+                <div class="bg-gradient-to-r from-neutral-50 to-red-50 rounded-lg p-6 border border-neutral-200">
+                  <p class="text-sm text-neutral-800">Configure chart properties: width, height, animate, showGrid, showAxes, gradient, colors.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

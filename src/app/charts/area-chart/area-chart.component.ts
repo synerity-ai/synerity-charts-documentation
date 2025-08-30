@@ -24,10 +24,16 @@ export class AreaChartComponent implements OnInit, OnDestroy, AfterViewInit, OnC
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.chart && (changes['data'] || changes['options'])) {
-      // Re-initialize chart when data or options change
-      setTimeout(() => {
+      console.log('Config changed, updating area chart:', { data: this.data, options: this.options });
+      console.log('Changes detected:', Object.keys(changes));
+      
+      // If curve type changed, we need to reinitialize the chart
+      if (changes['options'] && changes['options'].currentValue?.curveType !== changes['options'].previousValue?.curveType) {
+        console.log('Curve type changed, reinitializing chart');
         this.initChart();
-      }, 0);
+      } else {
+        this.updateChartInternal();
+      }
     }
   }
 
@@ -109,6 +115,33 @@ export class AreaChartComponent implements OnInit, OnDestroy, AfterViewInit, OnC
     }
   }
 
+  private updateChartInternal(): void {
+    if (this.chart) {
+      try {
+        console.log('Updating area chart with new data/options:', { data: this.data, options: this.options });
+        
+        // Update chart data
+        if (this.data && this.data.length > 0) {
+          this.chart.update(this.data);
+        }
+        
+        // Update chart options
+        this.chart.updateOptions(this.options);
+        
+        // Update chart dimensions if needed
+        if (this.chartContainer?.nativeElement) {
+          const width = this.chartContainer.nativeElement.offsetWidth;
+          const height = this.chartContainer.nativeElement.offsetHeight;
+          if (width && height) {
+            this.chart.resize(width, height);
+          }
+        }
+      } catch (error) {
+        console.error('Error updating area chart:', error);
+      }
+    }
+  }
+
   public resizeChart(): void {
     if (this.chart && this.chartContainer?.nativeElement) {
       const width = this.chartContainer.nativeElement.offsetWidth;
@@ -157,6 +190,12 @@ export class AreaChartComponent implements OnInit, OnDestroy, AfterViewInit, OnC
   public setAnimation(duration: number, easing: string = 'cubic-out'): void {
     if (this.chart) {
       this.chart.setAnimation(duration, easing);
+    }
+  }
+
+  public updateCurveType(curveType: string): void {
+    if (this.chart) {
+      this.chart.updateOptions({ curveType: curveType as any });
     }
   }
 }

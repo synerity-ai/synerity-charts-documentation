@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { NumberCards, NumberCardData, NumberCardOptions } from '@synerity/charts';
 
 @Component({
@@ -7,12 +7,14 @@ import { NumberCards, NumberCardData, NumberCardOptions } from '@synerity/charts
   styleUrls: ['./number-cards.component.scss'],
   standalone: false
 })
-export class NumberCardsComponent implements OnInit, OnDestroy, AfterViewInit {
+export class NumberCardsComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
   @Input() data: NumberCardData[] = [];
   @Input() options: NumberCardOptions = {};
   @ViewChild('chartContainer', { static: true }) chartContainer!: ElementRef;
 
   private chart: NumberCards | null = null;
+
+  constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     // Component initialization
@@ -20,6 +22,14 @@ export class NumberCardsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.initChart();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.chart && (changes['data'] || changes['options'])) {
+      console.log('Config changed, updating number cards:', { data: this.data, options: this.options });
+      console.log('Changes detected:', Object.keys(changes));
+      this.updateChartInternal();
+    }
   }
 
   ngOnDestroy(): void {
@@ -57,6 +67,30 @@ export class NumberCardsComponent implements OnInit, OnDestroy, AfterViewInit {
   public updateChart(newData: NumberCardData[]): void {
     if (this.chart) {
       this.chart.update(newData);
+    }
+  }
+
+  private updateChartInternal(): void {
+    if (this.chart) {
+      try {
+        console.log('Updating number cards with new data/options:', { data: this.data, options: this.options });
+        
+        // Update chart data
+        if (this.data && this.data.length > 0) {
+          this.chart.update(this.data);
+        }
+        
+        // Update chart options using available methods
+        if (this.chartContainer?.nativeElement) {
+          const width = this.chartContainer.nativeElement.offsetWidth;
+          const height = this.chartContainer.nativeElement.offsetHeight;
+          if (width && height) {
+            this.chart.resize(width, height);
+          }
+        }
+      } catch (error) {
+        console.error('Error updating number cards:', error);
+      }
     }
   }
 

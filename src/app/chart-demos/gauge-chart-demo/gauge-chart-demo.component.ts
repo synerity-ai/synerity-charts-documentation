@@ -1,5 +1,6 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { GaugeData, GaugeChartOptions } from '@synerity/charts';
+import { GaugeChartComponent } from '../../charts/gauge-chart/gauge-chart.component';
 
 @Component({
   selector: 'app-gauge-chart-demo',
@@ -8,6 +9,8 @@ import { GaugeData, GaugeChartOptions } from '@synerity/charts';
   standalone: false
 })
 export class GaugeChartDemoComponent implements OnInit {
+  @ViewChild(GaugeChartComponent) gaugeChartComponent!: GaugeChartComponent;
+  
   // Sample data for gauge chart
   gaugeChartData: GaugeData = {
     value: 75,
@@ -53,20 +56,32 @@ export class GaugeChartDemoComponent implements OnInit {
 
   // Method to update gauge value
   updateValue(value: number): void {
+    console.log('Updating gauge value to:', value);
     this.gaugeChartData = {
       ...this.gaugeChartData,
       value: Math.max(this.gaugeChartData.min, Math.min(this.gaugeChartData.max, value))
     };
+    
+    // Force a complete re-render by creating a new config object
+    this.gaugeChartData = { ...this.gaugeChartData };
+    
     this.cdr.detectChanges();
   }
 
   // Method to change gauge type
   changeType(type: 'radial' | 'linear'): void {
+    console.log('Changing gauge type to:', type);
     this.customizationOptions.type = type;
     this.gaugeChartConfig = {
       ...this.gaugeChartConfig,
       type: type
     };
+    
+    // Force a complete re-render by creating a new config object
+    this.gaugeChartConfig = { ...this.gaugeChartConfig };
+    
+    console.log('Updated gauge chart config:', this.gaugeChartConfig);
+    
     this.cdr.detectChanges();
   }
 
@@ -200,6 +215,18 @@ export class GaugeChartDemoComponent implements OnInit {
     }, 3000);
   }
 
+  // Event handlers
+  onChartReady() {
+    console.log('Gauge chart is ready');
+  }
+
+  // Force chart refresh
+  refreshChart() {
+    console.log('Forcing gauge chart refresh');
+    this.gaugeChartConfig = { ...this.gaugeChartConfig };
+    this.cdr.detectChanges();
+  }
+
   // Get percentage for display
   getPercentage(): number {
     return (this.gaugeChartData.value / this.gaugeChartData.max * 100);
@@ -221,5 +248,61 @@ export class GaugeChartDemoComponent implements OnInit {
     if (percentage < 33) return 'low';
     if (percentage < 66) return 'medium';
     return 'high';
+  }
+
+  // Test method to verify all options work
+  testAllOptions() {
+    console.log('Testing all gauge chart options...');
+    
+    // Test gauge type changes
+    this.changeType('linear');
+    setTimeout(() => {
+      this.changeType('radial');
+    }, 1000);
+    
+    // Test value changes
+    setTimeout(() => {
+      this.updateValue(25);
+      setTimeout(() => {
+        this.updateValue(75);
+        setTimeout(() => {
+          this.updateValue(50);
+        }, 1000);
+      }, 1000);
+    }, 2000);
+    
+    // Test dimension changes
+    setTimeout(() => {
+      this.updateWidth(700);
+      this.updateHeight(500);
+      setTimeout(() => {
+        this.updateWidth(500);
+        this.updateHeight(300);
+      }, 1000);
+    }, 5000);
+    
+    // Test chart options
+    setTimeout(() => {
+      this.toggleAnimation();
+      setTimeout(() => {
+        this.toggleShowValue();
+        setTimeout(() => {
+          this.toggleShowLabel();
+          setTimeout(() => {
+            this.toggleAnimation();
+            this.toggleShowValue();
+            this.toggleShowLabel();
+          }, 1000);
+        }, 1000);
+      }, 1000);
+    }, 7000);
+    
+    // Test arc width
+    setTimeout(() => {
+      this.updateArcWidth(15);
+      setTimeout(() => {
+        this.updateArcWidth(8);
+      }, 1000);
+    }, 9000);
   }
 }

@@ -299,26 +299,39 @@ export class LineChartDemoComponent implements OnInit, OnDestroy {
   // Data Management
   updateChartData() {
     const selectedData = this.multiLineDataSets[this.currentDataSet as keyof typeof this.multiLineDataSets];
+    const colorScheme = this.colorSchemes[this.customizationOptions.colorScheme as keyof typeof this.colorSchemes];
+    
+    console.log('Updating chart data with color scheme:', this.customizationOptions.colorScheme, 'colors:', colorScheme);
+    
+    // Apply color scheme to the data
+    const updatedData = {
+      ...selectedData,
+      series: selectedData.series.map((series, index) => ({
+        ...series,
+        color: colorScheme[index % colorScheme.length]
+      }))
+    };
+    
+    console.log('Updated data with new colors:', updatedData.series.map(s => ({ name: s.name, color: s.color })));
+    
     this.lineChartConfig = { 
       ...this.lineChartConfig, 
-      data: selectedData,
+      data: updatedData,
       multiLine: true,
       showLegend: true
     };
   }
 
   changeDataSet(dataSet: string) {
+    console.log('Changing data set to:', dataSet);
     this.currentDataSet = dataSet;
     this.updateChartData();
     this.updateCurrentChartData();
     
-    // Use direct chart component method to update data
-    if (this.lineChartComponent) {
-      this.lineChartComponent.updateData(this.currentChartData);
-      console.log('Line chart data updated via component method');
-    } else {
-      this.triggerChartUpdate();
-    }
+    // Force a complete re-render by creating a new config object
+    this.lineChartConfig = { ...this.lineChartConfig };
+    
+    this.cdr.detectChanges();
   }
 
   updateCurrentChartData() {
@@ -328,102 +341,123 @@ export class LineChartDemoComponent implements OnInit, OnDestroy {
 
   // Customization Methods
   updateWidth(value: number) {
+    console.log('Updating width to:', value);
     this.customizationOptions.width = value;
     this.lineChartConfig = { ...this.lineChartConfig, width: value };
     
-    if (this.lineChartComponent) {
-      this.lineChartComponent.updateChartOptions({ width: value });
-    } else {
-      this.triggerChartUpdate();
-    }
+    // Force a complete re-render by creating a new config object
+    this.lineChartConfig = { ...this.lineChartConfig };
+    
+    this.cdr.detectChanges();
   }
 
   updateHeight(value: number) {
+    console.log('Updating height to:', value);
     this.customizationOptions.height = value;
     this.lineChartConfig = { ...this.lineChartConfig, height: value };
     
-    if (this.lineChartComponent) {
-      this.lineChartComponent.updateChartOptions({ height: value });
-    } else {
-      this.triggerChartUpdate();
-    }
+    // Force a complete re-render by creating a new config object
+    this.lineChartConfig = { ...this.lineChartConfig };
+    
+    this.cdr.detectChanges();
   }
 
   toggleAnimation() {
+    console.log('Toggling animation');
     this.customizationOptions.animate = !this.customizationOptions.animate;
     this.lineChartConfig = { ...this.lineChartConfig, animate: this.customizationOptions.animate };
     
-    if (this.lineChartComponent) {
-      this.lineChartComponent.updateChartOptions({ animate: this.customizationOptions.animate });
-    } else {
-      this.triggerChartUpdate();
-    }
+    // Force a complete re-render by creating a new config object
+    this.lineChartConfig = { ...this.lineChartConfig };
+    
+    this.cdr.detectChanges();
   }
 
   toggleShowPoints() {
+    console.log('Toggling show points');
     this.customizationOptions.showPoints = !this.customizationOptions.showPoints;
     this.lineChartConfig = { ...this.lineChartConfig, showPoints: this.customizationOptions.showPoints };
     
-    if (this.lineChartComponent) {
-      this.lineChartComponent.updateChartOptions({ showPoints: this.customizationOptions.showPoints });
-    } else {
-      this.triggerChartUpdate();
-    }
+    // Force a complete re-render by creating a new config object
+    this.lineChartConfig = { ...this.lineChartConfig };
+    
+    this.cdr.detectChanges();
   }
 
   toggleShowGrid() {
+    console.log('Toggling show grid');
     this.customizationOptions.showGrid = !this.customizationOptions.showGrid;
     this.lineChartConfig = { ...this.lineChartConfig, showGrid: this.customizationOptions.showGrid };
     
-    if (this.lineChartComponent) {
-      this.lineChartComponent.updateChartOptions({ showGrid: this.customizationOptions.showGrid });
-    } else {
-      this.triggerChartUpdate();
-    }
+    // Force a complete re-render by creating a new config object
+    this.lineChartConfig = { ...this.lineChartConfig };
+    
+    this.cdr.detectChanges();
   }
 
   updateCurveType(curveType: string) {
+    console.log('Updating curve type to:', curveType);
     this.customizationOptions.curveType = curveType as any;
     this.lineChartConfig = { ...this.lineChartConfig, curveType: curveType as any };
     
-    if (this.lineChartComponent) {
-      this.lineChartComponent.updateChartOptions({ curveType: curveType as any });
-    } else {
-      this.triggerChartUpdate();
-    }
+    // Force a complete re-render by creating a new config object
+    this.lineChartConfig = { ...this.lineChartConfig };
+    
+    this.cdr.detectChanges();
   }
 
   updateStrokeWidth(value: number) {
+    console.log('Updating stroke width to:', value);
     this.customizationOptions.strokeWidth = value;
     this.lineChartConfig = { ...this.lineChartConfig, strokeWidth: value };
     
-    if (this.lineChartComponent) {
-      this.lineChartComponent.updateChartOptions({ strokeWidth: value });
-    } else {
-      this.triggerChartUpdate();
-    }
+    // Force a complete re-render by creating a new config object
+    this.lineChartConfig = { ...this.lineChartConfig };
+    
+    this.cdr.detectChanges();
   }
 
   toggleLegend() {
+    console.log('Toggling legend');
     this.customizationOptions.showLegend = !this.customizationOptions.showLegend;
     this.lineChartConfig = { ...this.lineChartConfig, showLegend: this.customizationOptions.showLegend };
     
-    if (this.lineChartComponent) {
-      this.lineChartComponent.updateChartOptions({ showLegend: this.customizationOptions.showLegend });
-    } else {
-      this.triggerChartUpdate();
-    }
+    // Force a complete re-render by creating a new config object
+    this.lineChartConfig = { ...this.lineChartConfig };
+    
+    this.cdr.detectChanges();
   }
 
   changeColorScheme(scheme: string) {
+    console.log('Changing color scheme to:', scheme);
     this.customizationOptions.colorScheme = scheme;
     this.updateChartData();
     this.updateCurrentChartData();
-    this.triggerChartUpdate();
+    
+    // Force a complete re-render by creating a new config object
+    this.lineChartConfig = { ...this.lineChartConfig };
+    
+    console.log('Updated line chart config:', this.lineChartConfig);
+    
+    // Update the chart component directly if available
+    if (this.lineChartComponent) {
+      console.log('Updating chart component with new data');
+      this.lineChartComponent.updateChartData(this.lineChartConfig.data);
+    } else {
+      console.warn('Line chart component not available');
+    }
+    
+    this.cdr.detectChanges();
   }
 
   triggerChartUpdate() {
     this.lineChartConfig = { ...this.lineChartConfig };
+    
+    // Force update the chart component
+    if (this.lineChartComponent) {
+      this.lineChartComponent.updateChartData(this.lineChartConfig.data);
+    }
+    
     this.cdr.detectChanges();
   }
 
@@ -438,6 +472,12 @@ export class LineChartDemoComponent implements OnInit, OnDestroy {
   onChartReady() {
     this.isChartReady = true;
     console.log('Line chart is ready');
+    
+    // Ensure the chart has the latest data and colors
+    if (this.lineChartComponent) {
+      console.log('Chart ready - updating with current data');
+      this.lineChartComponent.updateChartData(this.lineChartConfig.data);
+    }
   }
 
   onDataUpdate(newData: ChartData[]) {
@@ -514,5 +554,64 @@ export class LineChartDemoComponent implements OnInit, OnDestroy {
     
     if (firstValue === 0) return 0;
     return ((lastValue - firstValue) / firstValue) * 100;
+  }
+
+  // Test method to verify all options work
+  testAllOptions() {
+    console.log('Testing all line chart options...');
+    
+    // Test curve type changes
+    this.updateCurveType('monotoneX');
+    setTimeout(() => {
+      this.updateCurveType('step');
+      setTimeout(() => {
+        this.updateCurveType('linear');
+      }, 1000);
+    }, 1000);
+    
+    // Test color scheme changes
+    setTimeout(() => {
+      this.changeColorScheme('warm');
+      setTimeout(() => {
+        this.changeColorScheme('cool');
+        setTimeout(() => {
+          this.changeColorScheme('default');
+        }, 1000);
+      }, 1000);
+    }, 3000);
+    
+    // Test dimension changes
+    setTimeout(() => {
+      this.updateWidth(700);
+      this.updateHeight(500);
+      setTimeout(() => {
+        this.updateWidth(500);
+        this.updateHeight(300);
+      }, 1000);
+    }, 6000);
+    
+    // Test chart options
+    setTimeout(() => {
+      this.toggleAnimation();
+      setTimeout(() => {
+        this.toggleShowPoints();
+        setTimeout(() => {
+          this.toggleShowGrid();
+          setTimeout(() => {
+            this.toggleAnimation();
+            this.toggleShowPoints();
+            this.toggleShowGrid();
+          }, 1000);
+        }, 1000);
+      }, 1000);
+    }, 8000);
+    
+    // Test stroke width
+    setTimeout(() => {
+      this.updateStrokeWidth(4);
+      setTimeout(() => {
+        this.updateStrokeWidth(2);
+      }, 1000);
+    }, 11000);
   }
 }

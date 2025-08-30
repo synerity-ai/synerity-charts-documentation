@@ -52,12 +52,11 @@ export class LineChartComponent implements OnInit, OnDestroy, AfterViewInit, OnC
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    // Re-initialize chart when config changes
-    if (changes['config'] && !changes['config'].firstChange && this.chartContainer) {
-      setTimeout(() => {
-        this.initializeChart();
-        this.cdr.detectChanges();
-      }, 100);
+    // Update chart when config changes
+    if (changes['config'] && !changes['config'].firstChange && this.chart) {
+      console.log('Config changed, updating chart:', this.config);
+      console.log('Changes detected:', Object.keys(changes['config'].currentValue));
+      this.updateChart();
     }
   }
 
@@ -181,26 +180,51 @@ export class LineChartComponent implements OnInit, OnDestroy, AfterViewInit, OnC
     }
   }
 
-  public updateChartOptions(options: Partial<LineChartConfig>) {
+  private updateChart() {
     if (this.chart) {
-      // Update the config with new options
-      this.config = { ...this.config, ...options };
-      
-      // Update the chart with new options
-      this.chart.updateOptions(options);
-      
-      // Trigger change detection
-      this.cdr.detectChanges();
+      try {
+        console.log('Updating line chart with new config:', this.config);
+        console.log('Config data:', this.config.data);
+        
+        // Update chart data
+        if (this.config.data && (Array.isArray(this.config.data) ? this.config.data.length > 0 : true)) {
+          console.log('Updating chart with new data');
+          this.chart.update(this.config.data);
+        }
+        
+        // Update chart options using available methods
+        if (this.config.width && this.config.height) {
+          this.chart.resize(this.config.width, this.config.height);
+        }
+        
+        // Update other options using updateOptions method
+        const optionsToUpdate: Partial<LineChartConfig> = {};
+        if (this.config.curveType) optionsToUpdate.curveType = this.config.curveType;
+        if (this.config.strokeWidth !== undefined) optionsToUpdate.strokeWidth = this.config.strokeWidth;
+        if (this.config.showPoints !== undefined) optionsToUpdate.showPoints = this.config.showPoints;
+        if (this.config.showGrid !== undefined) optionsToUpdate.showGrid = this.config.showGrid;
+        
+        if (Object.keys(optionsToUpdate).length > 0) {
+          console.log('Updating chart options:', optionsToUpdate);
+          this.chart.updateOptions(optionsToUpdate);
+        }
+        
+        this.cdr.detectChanges();
+      } catch (error) {
+        console.error('Error updating line chart:', error);
+      }
+    } else {
+      console.warn('Chart not available for update');
     }
   }
 
-  public refreshChart() {
-    this.initAttempts = 0; // Reset attempts on manual refresh
-    setTimeout(() => {
-      this.initializeChart();
-      this.cdr.detectChanges();
-    }, 100);
+  public updateChartData(newData: ChartData[] | MultiLineChartData): void {
+    if (this.chart) {
+      this.chart.update(newData);
+    }
   }
+
+
 
   private destroyChart() {
     if (this.chart) {

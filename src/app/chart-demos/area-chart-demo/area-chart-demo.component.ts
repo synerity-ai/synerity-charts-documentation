@@ -192,41 +192,66 @@ export class AreaChartDemoComponent implements OnInit {
 
   // Method to change curve type
   changeCurveType(curveType: string): void {
+    console.log('Changing curve type to:', curveType);
     this.customizationOptions.curveType = curveType as any;
     this.areaChartConfig = {
       ...this.areaChartConfig,
       curveType: curveType as any
     };
+    
+    // Update the chart component directly
+    if (this.areaChartComponent) {
+      this.areaChartComponent.updateCurveType(curveType);
+    }
+    
+    // Force a complete re-render by creating a new config object
+    this.areaChartConfig = { ...this.areaChartConfig };
+    
     this.cdr.detectChanges();
   }
 
   // Method to update width
   updateWidth(value: number): void {
+    console.log('Updating width to:', value);
     this.customizationOptions.width = value;
     this.areaChartConfig = {
       ...this.areaChartConfig,
       width: value
     };
+    
+    // Force a complete re-render by creating a new config object
+    this.areaChartConfig = { ...this.areaChartConfig };
+    
     this.cdr.detectChanges();
   }
 
   // Method to update height
   updateHeight(value: number): void {
+    console.log('Updating height to:', value);
     this.customizationOptions.height = value;
     this.areaChartConfig = {
       ...this.areaChartConfig,
       height: value
     };
+    
+    // Force a complete re-render by creating a new config object
+    this.areaChartConfig = { ...this.areaChartConfig };
+    
     this.cdr.detectChanges();
   }
 
   // Method to toggle animation
   toggleAnimation(): void {
+    console.log('Toggling animation');
     this.customizationOptions.animate = !this.customizationOptions.animate;
     this.areaChartConfig = {
       ...this.areaChartConfig,
       animate: this.customizationOptions.animate
     };
+    
+    // Force a complete re-render by creating a new config object
+    this.areaChartConfig = { ...this.areaChartConfig };
+    
     this.cdr.detectChanges();
   }
 
@@ -292,25 +317,28 @@ export class AreaChartDemoComponent implements OnInit {
 
   // Method to change color scheme
   changeColorScheme(scheme: string): void {
+    console.log('Changing color scheme to:', scheme);
     this.customizationOptions.colorScheme = scheme;
     this.updateChartData();
     this.updateCurrentChartData();
+    
+    // Force a complete re-render by creating a new config object
+    this.areaChartConfig = { ...this.areaChartConfig };
+    
     this.cdr.detectChanges();
   }
 
   // Method to change data set
   changeDataSet(dataSet: string): void {
+    console.log('Changing data set to:', dataSet);
     this.currentDataSet = dataSet;
     this.updateChartData();
     this.updateCurrentChartData();
     
-    // Use direct chart component method to update data
-    if (this.areaChartComponent) {
-      this.areaChartComponent.updateChart(this.areaChartData);
-      console.log('Area chart data updated via component method');
-    } else {
-      this.cdr.detectChanges();
-    }
+    // Force a complete re-render by creating a new config object
+    this.areaChartConfig = { ...this.areaChartConfig };
+    
+    this.cdr.detectChanges();
   }
 
   // Enhanced feature methods
@@ -488,5 +516,64 @@ export class AreaChartDemoComponent implements OnInit {
   getAverageValue(): number {
     if (this.currentChartData.length === 0) return 0;
     return this.getTotalValue() / this.currentChartData.length;
+  }
+
+  // Test method to verify all options work
+  testAllOptions() {
+    console.log('Testing all area chart options...');
+    
+    // Test curve type changes
+    this.changeCurveType('monotoneX');
+    setTimeout(() => {
+      this.changeCurveType('step');
+      setTimeout(() => {
+        this.changeCurveType('linear');
+      }, 1000);
+    }, 1000);
+    
+    // Test color scheme changes
+    setTimeout(() => {
+      this.changeColorScheme('warm');
+      setTimeout(() => {
+        this.changeColorScheme('cool');
+        setTimeout(() => {
+          this.changeColorScheme('default');
+        }, 1000);
+      }, 1000);
+    }, 3000);
+    
+    // Test dimension changes
+    setTimeout(() => {
+      this.updateWidth(700);
+      this.updateHeight(500);
+      setTimeout(() => {
+        this.updateWidth(500);
+        this.updateHeight(300);
+      }, 1000);
+    }, 6000);
+    
+    // Test chart options
+    setTimeout(() => {
+      this.toggleAnimation();
+      setTimeout(() => {
+        this.togglePoints();
+        setTimeout(() => {
+          this.toggleGrid();
+          setTimeout(() => {
+            this.toggleAnimation();
+            this.togglePoints();
+            this.toggleGrid();
+          }, 1000);
+        }, 1000);
+      }, 1000);
+    }, 8000);
+    
+    // Test stroke width
+    setTimeout(() => {
+      this.updateStrokeWidth(4);
+      setTimeout(() => {
+        this.updateStrokeWidth(2);
+      }, 1000);
+    }, 11000);
   }
 }

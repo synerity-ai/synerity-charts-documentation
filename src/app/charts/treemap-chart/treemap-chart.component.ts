@@ -23,13 +23,10 @@ export class TreemapChartComponent implements OnInit, OnDestroy, AfterViewInit, 
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.chart && changes['data'] && !changes['data'].firstChange) {
-      this.chart.update(this.data);
-    }
-    if (this.chart && changes['options'] && !changes['options'].firstChange) {
-      // Reinitialize chart with new options
-      this.chart.destroy();
-      this.initChart();
+    if (this.chart && (changes['data'] || changes['options'])) {
+      console.log('Config changed, updating treemap chart:', { data: this.data, options: this.options });
+      console.log('Changes detected:', Object.keys(changes));
+      this.updateChartInternal();
     }
   }
 
@@ -69,6 +66,28 @@ export class TreemapChartComponent implements OnInit, OnDestroy, AfterViewInit, 
   public updateChart(newData: TreemapData): void {
     if (this.chart) {
       this.chart.update(newData);
+    }
+  }
+
+  private updateChartInternal(): void {
+    if (this.chart) {
+      try {
+        console.log('Updating treemap chart with new data/options:', { data: this.data, options: this.options });
+        
+        // Update chart data
+        this.chart.update(this.data);
+        
+        // Update chart options using available methods
+        if (this.chartContainer?.nativeElement) {
+          const width = this.chartContainer.nativeElement.offsetWidth;
+          const height = this.chartContainer.nativeElement.offsetHeight;
+          if (width && height) {
+            this.chart.resize(width, height);
+          }
+        }
+      } catch (error) {
+        console.error('Error updating treemap chart:', error);
+      }
     }
   }
 

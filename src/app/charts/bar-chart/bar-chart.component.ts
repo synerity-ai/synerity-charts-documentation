@@ -314,13 +314,7 @@ export class BarChartComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
     }
   }
 
-  public refreshChart() {
-    this.initAttempts = 0; // Reset attempts on manual refresh
-    setTimeout(() => {
-      this.initializeChart();
-      this.cdr.detectChanges();
-    }, 100);
-  }
+
 
   private destroyChart() {
     if (this.chart) {

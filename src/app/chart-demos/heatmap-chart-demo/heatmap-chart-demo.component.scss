@@ -1,0 +1,53 @@
+// Button styles
+.btn-primary {
+  @apply inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-lg font-medium text-white text-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200;
+}
+
+.btn-secondary {
+  @apply inline-flex items-center px-4 py-2 bg-neutral-600 border border-transparent rounded-lg font-medium text-white text-sm hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-500 transition-colors duration-200;
+}
+
+.btn-accent {
+  @apply inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-lg font-medium text-white text-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200;
+}
+
+// Data set button styles
+.data-set-button {
+  @apply px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200;
+  
+  &.active {
+    @apply bg-red-50 border border-red-200 text-red-700;
+  }
+  
+  &:not(.active) {
+    @apply text-neutral-600 hover:bg-neutral-50;
+  }
+}
+
+// Color scale button styles
+.color-scale-button {
+  @apply w-full text-left px-3 py-2 rounded-lg text-sm transition-colors duration-200;
+  
+  &.active {
+    @apply bg-red-50 border border-red-200 text-red-700;
+  }
+  
+  &:not(.active) {
+    @apply text-neutral-600 hover:bg-neutral-50;
+  }
+}
+
+// Chart container styles
+.chart-container {
+  @apply bg-white rounded-lg border border-neutral-200 p-6;
+}
+
+// Customization panel styles
+.customization-panel {
+  @apply bg-white rounded-lg border border-neutral-200 p-4;
+}
+
+// Statistics panel styles
+.statistics-panel {
+  @apply bg-white rounded-lg border border-neutral-200 p-4;
+}

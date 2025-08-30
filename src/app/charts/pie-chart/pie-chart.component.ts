@@ -81,12 +81,11 @@ export class PieChartComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    // Re-initialize chart when config changes
-    if (changes['config'] && !changes['config'].firstChange && this.chartContainer) {
-      setTimeout(() => {
-        this.initializeChart();
-        this.cdr.detectChanges();
-      }, 100);
+    // Update chart when config changes
+    if (changes['config'] && !changes['config'].firstChange && this.chart) {
+      console.log('Config changed, updating chart:', this.config);
+      console.log('Changes detected:', Object.keys(changes['config'].currentValue));
+      this.updateChart();
     }
   }
 
@@ -226,10 +225,50 @@ export class PieChartComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
     }
   }
 
-  public refreshChart() {
-    this.initAttempts = 0; // Reset attempts on manual refresh
-    this.waitForContainer();
+  private updateChart() {
+    if (this.chart) {
+      try {
+        console.log('Updating chart with new config:', this.config);
+        
+        // Update chart data
+        if (this.config.data && this.config.data.length > 0) {
+          this.chart.update(this.config.data);
+        }
+        
+        // Update chart options using available methods
+        if (this.config.width && this.config.height) {
+          this.chart.resize(this.config.width, this.config.height);
+        }
+        
+        if (this.config.variant) {
+          console.log('Setting chart variant to:', this.config.variant);
+          this.chart.setVariant(this.config.variant);
+        }
+        
+        if (this.config.innerRadius !== undefined) {
+          this.chart.setInnerRadius(this.config.innerRadius);
+        }
+        
+        if (this.config.animate !== undefined) {
+          this.chart.enableAnimation(this.config.animate);
+        }
+        
+        if (this.config.animation?.duration) {
+          this.chart.setAnimationDuration(this.config.animation.duration);
+        }
+        
+        if (this.config.interactivity?.tooltipEnabled !== undefined) {
+          this.chart.enableTooltip(this.config.interactivity.tooltipEnabled);
+        }
+        
+        this.cdr.detectChanges();
+      } catch (error) {
+        console.error('Error updating chart:', error);
+      }
+    }
   }
+
+
 
   private destroyChart() {
     if (this.chart) {
@@ -285,7 +324,7 @@ export class PieChartComponent implements OnInit, OnDestroy, AfterViewInit, OnCh
   private onResize(): void {
     if (this.chart) {
       setTimeout(() => {
-        this.refreshChart();
+        this.waitForContainer();
       }, 100);
     }
   }

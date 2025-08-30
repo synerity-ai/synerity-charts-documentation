@@ -1,5 +1,6 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { BubbleData, BubbleChartOptions } from '@synerity/charts';
+import { BubbleChartComponent } from '../../charts/bubble-chart/bubble-chart.component';
 
 @Component({
   selector: 'app-bubble-chart-demo',
@@ -8,6 +9,8 @@ import { BubbleData, BubbleChartOptions } from '@synerity/charts';
   standalone: false
 })
 export class BubbleChartDemoComponent implements OnInit {
+  @ViewChild(BubbleChartComponent) bubbleChartComponent!: BubbleChartComponent;
+  
   // Sample data for bubble chart
   bubbleChartData: BubbleData[] = [
     { x: 10, y: 20, r: 5, label: 'Point A', color: '#3B82F6' },
@@ -56,6 +59,14 @@ export class BubbleChartDemoComponent implements OnInit {
       { x: 55, y: 35, r: 14, label: 'Product C', color: '#F59E0B' },
       { x: 75, y: 65, r: 8, label: 'Product D', color: '#EF4444' },
       { x: 95, y: 85, r: 12, label: 'Product E', color: '#8B5CF6' }
+    ],
+    companies: [
+      { x: 20, y: 30, r: 6, label: 'Tech Corp', color: '#3B82F6' },
+      { x: 40, y: 50, r: 9, label: 'Finance Inc', color: '#10B981' },
+      { x: 60, y: 40, r: 11, label: 'Retail Co', color: '#F59E0B' },
+      { x: 80, y: 70, r: 7, label: 'Manufacturing', color: '#EF4444' },
+      { x: 25, y: 75, r: 13, label: 'Healthcare', color: '#8B5CF6' },
+      { x: 85, y: 25, r: 8, label: 'Energy Co', color: '#06B6D4' }
     ]
   };
 
@@ -73,12 +84,24 @@ export class BubbleChartDemoComponent implements OnInit {
   // Data Management
   updateChartData() {
     const selectedData = this.sampleDataSets[this.currentDataSet as keyof typeof this.sampleDataSets];
+    
+    if (!selectedData) {
+      console.warn(`No data found for data set '${this.currentDataSet}', using population data`);
+      this.currentDataSet = 'population';
+      this.bubbleChartData = this.sampleDataSets.population;
+      return;
+    }
+    
+    console.log(`Updating chart data with '${this.currentDataSet}' data set:`, selectedData);
+    
     this.bubbleChartData = selectedData.map(item => ({
       ...item,
       x: item.x + (Math.random() - 0.5) * 10,
       y: item.y + (Math.random() - 0.5) * 10,
       r: item.r + (Math.random() - 0.5) * 5
     }));
+    
+    console.log('Updated bubble chart data:', this.bubbleChartData);
   }
 
 
@@ -99,11 +122,16 @@ export class BubbleChartDemoComponent implements OnInit {
 
   // Method to update width
   updateWidth(value: number): void {
+    console.log('Updating width to:', value);
     this.customizationOptions.width = value;
     this.bubbleChartConfig = {
       ...this.bubbleChartConfig,
       width: value
     };
+    
+    // Force a complete re-render by creating a new config object
+    this.bubbleChartConfig = { ...this.bubbleChartConfig };
+    
     this.cdr.detectChanges();
   }
 
@@ -179,9 +207,30 @@ export class BubbleChartDemoComponent implements OnInit {
 
   // Method to change data set
   changeDataSet(dataSet: string): void {
-    this.currentDataSet = dataSet;
+    console.log('Changing data set to:', dataSet);
+    
+    // Check if the data set exists
+    if (!this.sampleDataSets[dataSet as keyof typeof this.sampleDataSets]) {
+      console.warn(`Data set '${dataSet}' not found, using 'population' instead`);
+      this.currentDataSet = 'population';
+    } else {
+      this.currentDataSet = dataSet;
+    }
+    
     this.updateChartData();
     this.updateCurrentChartData();
+    
+    // Force a complete re-render by creating a new config object
+    this.bubbleChartConfig = { ...this.bubbleChartConfig };
+    
+    console.log('Updated bubble chart data:', this.bubbleChartData);
+    
+    // Update the chart component directly if available
+    if (this.bubbleChartComponent) {
+      console.log('Updating bubble chart component with new data');
+      this.bubbleChartComponent.updateChart(this.bubbleChartData);
+    }
+    
     this.cdr.detectChanges();
   }
 
@@ -276,5 +325,66 @@ export class BubbleChartDemoComponent implements OnInit {
   // Get min Y value
   getMinY(): number {
     return Math.min(...this.currentChartData.map(d => d.y));
+  }
+
+  // Event handlers
+  onChartReady() {
+    console.log('Bubble chart is ready');
+    
+    // Ensure the chart has the latest data
+    if (this.bubbleChartComponent) {
+      console.log('Chart ready - updating with current data');
+      this.bubbleChartComponent.updateChart(this.bubbleChartData);
+    }
+  }
+
+  // Test method to verify all options work
+  testAllOptions() {
+    console.log('Testing all bubble chart options...');
+    
+    // Test data set changes
+    this.changeDataSet('sales');
+    setTimeout(() => {
+      this.changeDataSet('companies');
+      setTimeout(() => {
+        this.changeDataSet('population');
+      }, 1000);
+    }, 1000);
+    
+    // Test dimension changes
+    setTimeout(() => {
+      this.updateWidth(700);
+      this.updateHeight(500);
+      setTimeout(() => {
+        this.updateWidth(500);
+        this.updateHeight(300);
+      }, 1000);
+    }, 3000);
+    
+    // Test chart options
+    setTimeout(() => {
+      this.toggleAnimation();
+      setTimeout(() => {
+        this.toggleLabels();
+        setTimeout(() => {
+          this.toggleGrid();
+          setTimeout(() => {
+            this.toggleAnimation();
+            this.toggleLabels();
+            this.toggleGrid();
+          }, 1000);
+        }, 1000);
+      }, 1000);
+    }, 5000);
+    
+    // Test radius range
+    setTimeout(() => {
+      this.updateMinRadius(8);
+      this.updateMaxRadius(20);
+      setTimeout(() => {
+        this.updateMinRadius(3);
+        this.updateMaxRadius(15);
+      }, 1000);
+    }, 7000);
   }
 }

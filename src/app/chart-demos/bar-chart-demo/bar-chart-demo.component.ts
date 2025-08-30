@@ -113,12 +113,10 @@ export class BarChartDemoComponent implements OnInit, OnDestroy {
     this.customizationOptions.width = value;
     this.barChartConfig.width = value;
     
-    // Use direct chart component method
-    if (this.barChartComponent) {
-      this.barChartComponent.updateChartOptions({ width: this.barChartConfig.width });
-    } else {
-      this.triggerChartUpdate();
-    }
+    // Force a complete re-render by creating a new config object
+    this.barChartConfig = { ...this.barChartConfig };
+    
+    this.cdr.detectChanges();
   }
 
   updateHeight(value: number) {
@@ -126,12 +124,10 @@ export class BarChartDemoComponent implements OnInit, OnDestroy {
     this.customizationOptions.height = value;
     this.barChartConfig.height = value;
     
-    // Use direct chart component method
-    if (this.barChartComponent) {
-      this.barChartComponent.updateChartOptions({ height: this.barChartConfig.height });
-    } else {
-      this.triggerChartUpdate();
-    }
+    // Force a complete re-render by creating a new config object
+    this.barChartConfig = { ...this.barChartConfig };
+    
+    this.cdr.detectChanges();
   }
 
   toggleAnimation() {
@@ -140,12 +136,10 @@ export class BarChartDemoComponent implements OnInit, OnDestroy {
     this.barChartConfig.animate = this.customizationOptions.animate;
     console.log('Animation set to:', this.barChartConfig.animate);
     
-    // Use direct chart component method
-    if (this.barChartComponent) {
-      this.barChartComponent.updateChartOptions({ animate: this.barChartConfig.animate });
-    } else {
-      this.triggerChartUpdate();
-    }
+    // Force a complete re-render by creating a new config object
+    this.barChartConfig = { ...this.barChartConfig };
+    
+    this.cdr.detectChanges();
   }
 
   toggleShowValues() {
@@ -225,13 +219,10 @@ export class BarChartDemoComponent implements OnInit, OnDestroy {
     this.updateChartData();
     this.updateCurrentChartData();
     
-    // Use direct chart component method to update data
-    if (this.barChartComponent) {
-      this.barChartComponent.updateData(this.barChartConfig.data);
-      console.log('Bar chart data updated via component method');
-    } else {
-      this.triggerChartUpdate();
-    }
+    // Force a complete re-render by creating a new config object
+    this.barChartConfig = { ...this.barChartConfig };
+    
+    this.cdr.detectChanges();
   }
 
   // Helper method to trigger chart updates

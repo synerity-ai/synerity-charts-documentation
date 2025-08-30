@@ -110,6 +110,16 @@ export class ScatterChartDemoComponent implements OnInit {
       { x: 50, y: 30, label: 'Point 5', color: '#8B5CF6', size: 7, category: 'B' },
       { x: 60, y: 55, label: 'Point 6', color: '#06B6D4', size: 9, category: 'C' }
     ],
+    random: [
+      { x: 15, y: 25, label: 'Random 1', color: '#3B82F6', size: 6, category: 'A' },
+      { x: 35, y: 40, label: 'Random 2', color: '#10B981', size: 8, category: 'B' },
+      { x: 55, y: 15, label: 'Random 3', color: '#F59E0B', size: 7, category: 'C' },
+      { x: 25, y: 60, label: 'Random 4', color: '#EF4444', size: 9, category: 'A' },
+      { x: 70, y: 35, label: 'Random 5', color: '#8B5CF6', size: 5, category: 'B' },
+      { x: 45, y: 50, label: 'Random 6', color: '#06B6D4', size: 10, category: 'C' },
+      { x: 80, y: 20, label: 'Random 7', color: '#F97316', size: 6, category: 'A' },
+      { x: 10, y: 70, label: 'Random 8', color: '#EC4899', size: 8, category: 'B' }
+    ],
     clusters: [
       { x: 5, y: 5, label: 'Cluster 1', color: '#3B82F6', size: 6, category: 'Cluster 1' },
       { x: 8, y: 7, label: 'Cluster 1', color: '#3B82F6', size: 5, category: 'Cluster 1' },
@@ -144,10 +154,42 @@ export class ScatterChartDemoComponent implements OnInit {
   // Data Management
   updateChartData() {
     const selectedData = this.sampleDataSets[this.currentDataSet as keyof typeof this.sampleDataSets];
-    this.scatterChartConfig.data = selectedData.map(item => ({
-      ...item,
-      x: item.x + (Math.random() - 0.5) * 10,
-      y: item.y + (Math.random() - 0.5) * 10
+    
+    if (!selectedData) {
+      console.warn(`No data found for data set '${this.currentDataSet}', using correlation data`);
+      this.currentDataSet = 'correlation';
+      this.scatterChartConfig.data = this.sampleDataSets.correlation;
+      return;
+    }
+    
+    console.log(`Updating chart data with '${this.currentDataSet}' data set:`, selectedData);
+    
+    // For random data set, generate truly random data
+    if (this.currentDataSet === 'random') {
+      this.scatterChartConfig.data = this.generateRandomScatterData();
+    } else {
+      this.scatterChartConfig.data = selectedData.map(item => ({
+        ...item,
+        x: item.x + (Math.random() - 0.5) * 10,
+        y: item.y + (Math.random() - 0.5) * 10
+      }));
+    }
+  }
+
+  // Generate random scatter data
+  private generateRandomScatterData(): ScatterData[] {
+    const dataPoints = Math.floor(Math.random() * 15) + 8; // 8-22 data points
+    const colors = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4', '#F97316', '#EC4899'];
+    const categories = ['A', 'B', 'C', 'D'];
+    
+    return Array.from({ length: dataPoints }, (_, i) => ({
+      x: Math.floor(Math.random() * 100),
+      y: Math.floor(Math.random() * 100),
+      label: `Random ${i + 1}`,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      size: Math.floor(Math.random() * 10) + 3,
+      category: categories[Math.floor(Math.random() * categories.length)],
+      revenue: Math.floor(Math.random() * 100000) + 10000
     }));
   }
 
@@ -157,59 +199,106 @@ export class ScatterChartDemoComponent implements OnInit {
 
   // Enhanced Customization Methods
   updateWidth(value: number) {
+    console.log('Updating width to:', value);
     this.customizationOptions.width = value;
     this.scatterChartConfig.width = value;
+    
+    // Force a complete re-render by creating a new config object
+    this.scatterChartConfig = { ...this.scatterChartConfig };
+    
     this.cdr.detectChanges();
   }
 
   updateHeight(value: number) {
+    console.log('Updating height to:', value);
     this.customizationOptions.height = value;
     this.scatterChartConfig.height = value;
+    
+    // Force a complete re-render by creating a new config object
+    this.scatterChartConfig = { ...this.scatterChartConfig };
+    
     this.cdr.detectChanges();
   }
 
   toggleAnimation() {
+    console.log('Toggling animation');
     this.customizationOptions.animate = !this.customizationOptions.animate;
     this.scatterChartConfig.animate = this.customizationOptions.animate;
+    
+    // Force a complete re-render by creating a new config object
+    this.scatterChartConfig = { ...this.scatterChartConfig };
+    
     this.cdr.detectChanges();
   }
 
   toggleShowGrid() {
+    console.log('Toggling show grid');
     this.customizationOptions.showGrid = !this.customizationOptions.showGrid;
     this.scatterChartConfig.showGrid = this.customizationOptions.showGrid;
+    
+    // Force a complete re-render by creating a new config object
+    this.scatterChartConfig = { ...this.scatterChartConfig };
+    
     this.cdr.detectChanges();
   }
 
   toggleTrendLine() {
+    console.log('Toggling trend line');
     this.customizationOptions.showTrendLine = !this.customizationOptions.showTrendLine;
     this.scatterChartConfig.showTrendLine = this.customizationOptions.showTrendLine;
+    
+    // Force a complete re-render by creating a new config object
+    this.scatterChartConfig = { ...this.scatterChartConfig };
+    
     this.cdr.detectChanges();
   }
 
   updatePointSize(value: number) {
+    console.log('Updating point size to:', value);
     this.customizationOptions.pointRadius = value;
     this.scatterChartConfig.pointRadius = value;
+    
+    // Force a complete re-render by creating a new config object
+    this.scatterChartConfig = { ...this.scatterChartConfig };
+    
     this.cdr.detectChanges();
   }
 
   updateOpacity(value: number) {
+    console.log('Updating opacity to:', value);
     this.customizationOptions.pointOpacity = value;
     this.scatterChartConfig.pointOpacity = value;
+    
+    // Force a complete re-render by creating a new config object
+    this.scatterChartConfig = { ...this.scatterChartConfig };
+    
     this.cdr.detectChanges();
   }
 
   changeDataSet(dataSet: string) {
-    this.currentDataSet = dataSet;
+    console.log('Changing data set to:', dataSet);
+    
+    // Check if the data set exists
+    if (!this.sampleDataSets[dataSet as keyof typeof this.sampleDataSets]) {
+      console.warn(`Data set '${dataSet}' not found, using 'correlation' instead`);
+      this.currentDataSet = 'correlation';
+    } else {
+      this.currentDataSet = dataSet;
+    }
+    
     this.updateChartData();
     this.updateCurrentChartData();
     
-    // Use direct chart component method to update data
+    // Force a complete re-render by creating a new config object
+    this.scatterChartConfig = { ...this.scatterChartConfig };
+    
+    // Update the chart component directly if available
     if (this.scatterChartComponent) {
+      console.log('Updating scatter chart component with new data set');
       this.scatterChartComponent.updateData(this.scatterChartConfig.data);
-      console.log('Scatter chart data updated via component method');
-    } else {
-      this.cdr.detectChanges();
     }
+    
+    this.cdr.detectChanges();
   }
 
   // New Enhanced Methods
@@ -327,6 +416,7 @@ export class ScatterChartDemoComponent implements OnInit {
 
   // Random Data Generation
   generateRandomData() {
+    console.log('Generating random data for scatter chart...');
     const dataPoints = Math.floor(Math.random() * 20) + 10; // 10-30 data points
     
     this.scatterChartConfig.data = Array.from({ length: dataPoints }, (_, i) => ({
@@ -339,15 +429,21 @@ export class ScatterChartDemoComponent implements OnInit {
       revenue: Math.floor(Math.random() * 100000) + 10000
     }));
     
+    console.log('Generated random data:', this.scatterChartConfig.data);
     this.updateCurrentChartData();
+    
+    // Force a complete re-render by creating a new config object
+    this.scatterChartConfig = { ...this.scatterChartConfig };
     
     // Use direct chart component method to update data
     if (this.scatterChartComponent) {
+      console.log('Updating scatter chart component with new data');
       this.scatterChartComponent.updateData(this.scatterChartConfig.data);
-      console.log('Scatter chart data updated via component method');
     } else {
-      this.cdr.detectChanges();
+      console.warn('Scatter chart component not available, using change detection');
     }
+    
+    this.cdr.detectChanges();
   }
 
 
@@ -384,6 +480,12 @@ export class ScatterChartDemoComponent implements OnInit {
   // Event handlers
   onChartReady() {
     console.log('Scatter chart is ready');
+    
+    // Ensure the chart has the latest data
+    if (this.scatterChartComponent) {
+      console.log('Chart ready - updating with current data');
+      this.scatterChartComponent.updateData(this.scatterChartConfig.data);
+    }
   }
 
   onDataUpdate(data: ScatterData[]) {
@@ -422,5 +524,81 @@ export class ScatterChartDemoComponent implements OnInit {
 
   getMinY(): number {
     return Math.min(...this.currentChartData.map(point => point.y));
+  }
+
+  // Force chart refresh
+  refreshChart() {
+    console.log('Forcing chart refresh');
+    this.scatterChartConfig = { ...this.scatterChartConfig };
+    
+    if (this.scatterChartComponent) {
+      this.scatterChartComponent.updateData(this.scatterChartConfig.data);
+    }
+    
+    this.cdr.detectChanges();
+  }
+
+  // Test method to verify all options work
+  testAllOptions() {
+    console.log('Testing all scatter chart options...');
+    
+    // Test data set changes
+    this.changeDataSet('random');
+    setTimeout(() => {
+      this.changeDataSet('clusters');
+      setTimeout(() => {
+        this.changeDataSet('correlation');
+      }, 1000);
+    }, 1000);
+    
+    // Test dimension changes
+    setTimeout(() => {
+      this.updateWidth(700);
+      this.updateHeight(500);
+      setTimeout(() => {
+        this.updateWidth(500);
+        this.updateHeight(300);
+      }, 1000);
+    }, 3000);
+    
+    // Test chart options
+    setTimeout(() => {
+      this.toggleAnimation();
+      setTimeout(() => {
+        this.toggleShowGrid();
+        setTimeout(() => {
+          this.toggleTrendLine();
+          setTimeout(() => {
+            this.toggleAnimation();
+            this.toggleShowGrid();
+            this.toggleTrendLine();
+          }, 1000);
+        }, 1000);
+      }, 1000);
+    }, 5000);
+    
+    // Test point size
+    setTimeout(() => {
+      this.updatePointSize(8);
+      setTimeout(() => {
+        this.updatePointSize(4);
+      }, 1000);
+    }, 7000);
+  }
+
+  // Test method to verify random data generation
+  testRandomDataGeneration() {
+    console.log('Testing random data generation...');
+    const testData = Array.from({ length: 5 }, (_, i) => ({
+      x: Math.floor(Math.random() * 100),
+      y: Math.floor(Math.random() * 100),
+      label: `Test Point ${i + 1}`,
+      color: `hsl(${Math.random() * 360}, 70%, 50%)`,
+      size: Math.floor(Math.random() * 10) + 3,
+      category: ['A', 'B', 'C'][Math.floor(Math.random() * 3)]
+    }));
+    
+    console.log('Test data generated:', testData);
+    return testData;
   }
 }

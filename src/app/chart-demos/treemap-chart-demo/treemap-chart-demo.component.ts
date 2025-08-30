@@ -229,11 +229,16 @@ export class TreemapChartDemoComponent implements OnInit {
 
   // Method to update width
   updateWidth(value: number): void {
+    console.log('Updating width to:', value);
     this.customizationOptions.width = value;
     this.treemapChartConfig = {
       ...this.treemapChartConfig,
       width: value
     };
+    
+    // Force a complete re-render by creating a new config object
+    this.treemapChartConfig = { ...this.treemapChartConfig };
+    
     this.cdr.detectChanges();
   }
 
@@ -259,9 +264,14 @@ export class TreemapChartDemoComponent implements OnInit {
 
   // Method to change data set
   changeDataSet(dataSet: string): void {
+    console.log('Changing data set to:', dataSet);
     if (this.sampleDataSets[dataSet]) {
       this.currentDataSet = dataSet;
       this.updateChartData();
+      
+      // Force a complete re-render by creating a new config object
+      this.treemapChartConfig = { ...this.treemapChartConfig };
+      
       this.cdr.detectChanges();
     }
   }
@@ -373,5 +383,57 @@ export class TreemapChartDemoComponent implements OnInit {
     
     traverse(data);
     return result;
+  }
+
+  // Test method to verify all options work
+  testAllOptions() {
+    console.log('Testing all treemap chart options...');
+    
+    // Test data set changes
+    this.changeDataSet('departments');
+    setTimeout(() => {
+      this.changeDataSet('categories');
+      setTimeout(() => {
+        this.changeDataSet('files');
+      }, 1000);
+    }, 1000);
+    
+
+    
+    // Test dimension changes
+    setTimeout(() => {
+      this.updateWidth(700);
+      this.updateHeight(500);
+      setTimeout(() => {
+        this.updateWidth(500);
+        this.updateHeight(300);
+      }, 1000);
+    }, 6000);
+    
+    // Test chart options
+    setTimeout(() => {
+      this.toggleAnimation();
+      setTimeout(() => {
+        this.toggleShowLabels();
+        setTimeout(() => {
+          this.toggleShowValues();
+          setTimeout(() => {
+            this.toggleAnimation();
+            this.toggleShowLabels();
+            this.toggleShowValues();
+          }, 1000);
+        }, 1000);
+      }, 1000);
+    }, 8000);
+    
+    // Test padding and border
+    setTimeout(() => {
+      this.updatePadding(10);
+      this.updateBorderWidth(3);
+      setTimeout(() => {
+        this.updatePadding(5);
+        this.updateBorderWidth(1);
+      }, 1000);
+    }, 11000);
   }
 }

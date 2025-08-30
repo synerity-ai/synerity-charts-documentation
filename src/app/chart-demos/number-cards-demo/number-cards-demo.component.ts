@@ -122,18 +122,28 @@ export class NumberCardsDemoComponent implements OnInit {
 
   // Method to change data set
   changeDataSet(dataSet: string): void {
+    console.log('Changing data set to:', dataSet);
     this.currentDataSet = dataSet;
     // Implementation would load different data sets
+    
+    // Force a complete re-render by creating a new config object
+    this.numberCardsConfig = { ...this.numberCardsConfig };
+    
     this.cdr.detectChanges();
   }
 
   // Method to update width
   updateWidth(width: number): void {
+    console.log('Updating width to:', width);
     this.customizationOptions.width = width;
     this.numberCardsConfig = {
       ...this.numberCardsConfig,
       width
     };
+    
+    // Force a complete re-render by creating a new config object
+    this.numberCardsConfig = { ...this.numberCardsConfig };
+    
     this.cdr.detectChanges();
   }
 
@@ -224,5 +234,63 @@ export class NumberCardsDemoComponent implements OnInit {
   // Get average change
   getAverageChange(): number {
     return this.numberCardsData.reduce((sum, card) => sum + (card.change || 0), 0) / this.numberCardsData.length;
+  }
+
+  // Test method to verify all options work
+  testAllOptions() {
+    console.log('Testing all number cards options...');
+    
+    // Test data set changes
+    this.changeDataSet('kpis');
+    setTimeout(() => {
+      this.changeDataSet('analytics');
+      setTimeout(() => {
+        this.changeDataSet('metrics');
+      }, 1000);
+    }, 1000);
+    
+    // Test dimension changes
+    setTimeout(() => {
+      this.updateWidth(700);
+      this.updateHeight(500);
+      setTimeout(() => {
+        this.updateWidth(500);
+        this.updateHeight(300);
+      }, 1000);
+    }, 3000);
+    
+    // Test chart options
+    setTimeout(() => {
+      this.toggleAnimation();
+      setTimeout(() => {
+        this.toggleShowChange();
+        setTimeout(() => {
+          this.toggleShowIcon();
+          setTimeout(() => {
+            this.toggleAnimation();
+            this.toggleShowChange();
+            this.toggleShowIcon();
+          }, 1000);
+        }, 1000);
+      }, 1000);
+    }, 5000);
+    
+    // Test card operations
+    setTimeout(() => {
+      this.addNewCard();
+      setTimeout(() => {
+        this.removeLastCard();
+      }, 1000);
+    }, 7000);
+    
+    // Test styling options
+    setTimeout(() => {
+      this.updateCardSpacing(20);
+      this.updateBorderRadius(15);
+      setTimeout(() => {
+        this.updateCardSpacing(10);
+        this.updateBorderRadius(8);
+      }, 1000);
+    }, 9000);
   }
 }

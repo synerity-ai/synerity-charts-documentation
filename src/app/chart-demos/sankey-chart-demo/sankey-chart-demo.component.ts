@@ -73,22 +73,44 @@ export class SankeyChartDemoComponent implements OnInit {
         { source: 'Renewable', target: 'Commercial', value: 40, color: '#EF4444' }
       ]
     },
-    migration: {
+    budget: {
       nodes: [
-        { id: 'Rural', name: 'Rural Areas', color: '#3B82F6' },
-        { id: 'Suburban', name: 'Suburban', color: '#10B981' },
-        { id: 'Urban', name: 'Urban Centers', color: '#F59E0B' },
-        { id: 'Services', name: 'Services', color: '#EF4444' },
-        { id: 'Manufacturing', name: 'Manufacturing', color: '#8B5CF6' },
-        { id: 'Technology', name: 'Technology', color: '#06B6D4' }
+        { id: 'Revenue', name: 'Revenue', color: '#3B82F6' },
+        { id: 'Taxes', name: 'Taxes', color: '#10B981' },
+        { id: 'Expenses', name: 'Expenses', color: '#F59E0B' },
+        { id: 'Infrastructure', name: 'Infrastructure', color: '#EF4444' },
+        { id: 'Education', name: 'Education', color: '#8B5CF6' },
+        { id: 'Healthcare', name: 'Healthcare', color: '#06B6D4' },
+        { id: 'Defense', name: 'Defense', color: '#84CC16' }
       ],
       links: [
-        { source: 'Rural', target: 'Suburban', value: 300, color: '#3B82F6' },
-        { source: 'Suburban', target: 'Urban', value: 200, color: '#10B981' },
-        { source: 'Rural', target: 'Services', value: 100, color: '#3B82F6' },
-        { source: 'Suburban', target: 'Manufacturing', value: 150, color: '#10B981' },
-        { source: 'Urban', target: 'Technology', value: 250, color: '#F59E0B' },
-        { source: 'Urban', target: 'Services', value: 180, color: '#F59E0B' }
+        { source: 'Revenue', target: 'Taxes', value: 400, color: '#3B82F6' },
+        { source: 'Revenue', target: 'Expenses', value: 600, color: '#3B82F6' },
+        { source: 'Taxes', target: 'Infrastructure', value: 150, color: '#10B981' },
+        { source: 'Taxes', target: 'Education', value: 120, color: '#10B981' },
+        { source: 'Expenses', target: 'Healthcare', value: 200, color: '#F59E0B' },
+        { source: 'Expenses', target: 'Defense', value: 180, color: '#F59E0B' },
+        { source: 'Expenses', target: 'Infrastructure', value: 100, color: '#F59E0B' },
+        { source: 'Expenses', target: 'Education', value: 120, color: '#F59E0B' }
+      ]
+    },
+    traffic: {
+      nodes: [
+        { id: 'North', name: 'North Region', color: '#3B82F6' },
+        { id: 'South', name: 'South Region', color: '#10B981' },
+        { id: 'East', name: 'East Region', color: '#F59E0B' },
+        { id: 'West', name: 'West Region', color: '#EF4444' },
+        { id: 'Highway1', name: 'Highway 1', color: '#8B5CF6' },
+        { id: 'Highway2', name: 'Highway 2', color: '#06B6D4' },
+        { id: 'CityCenter', name: 'City Center', color: '#84CC16' }
+      ],
+      links: [
+        { source: 'North', target: 'Highway1', value: 300, color: '#3B82F6' },
+        { source: 'South', target: 'Highway2', value: 250, color: '#10B981' },
+        { source: 'East', target: 'Highway1', value: 200, color: '#F59E0B' },
+        { source: 'West', target: 'Highway2', value: 180, color: '#EF4444' },
+        { source: 'Highway1', target: 'CityCenter', value: 500, color: '#8B5CF6' },
+        { source: 'Highway2', target: 'CityCenter', value: 430, color: '#06B6D4' }
       ]
     }
   };
@@ -104,7 +126,11 @@ export class SankeyChartDemoComponent implements OnInit {
 
   // Method to update chart data
   updateChartData(): void {
+    console.log('Updating chart data for dataset:', this.currentDataSet);
     this.sankeyChartData = this.sampleDataSets[this.currentDataSet as keyof typeof this.sampleDataSets];
+    
+    // Force a complete re-render by creating a new data object
+    this.sankeyChartData = { ...this.sankeyChartData };
   }
 
 
@@ -151,11 +177,16 @@ export class SankeyChartDemoComponent implements OnInit {
 
   // Method to update width
   updateWidth(value: number): void {
+    console.log('Updating width to:', value);
     this.customizationOptions.width = value;
     this.sankeyChartConfig = {
       ...this.sankeyChartConfig,
       width: value
     };
+    
+    // Force a complete re-render by creating a new config object
+    this.sankeyChartConfig = { ...this.sankeyChartConfig };
+    
     this.cdr.detectChanges();
   }
 
@@ -181,13 +212,19 @@ export class SankeyChartDemoComponent implements OnInit {
 
   // Method to change data set
   changeDataSet(dataSet: string): void {
+    console.log('Changing data set to:', dataSet);
     this.currentDataSet = dataSet;
     this.updateChartData();
+    
+    // Force a complete re-render by creating a new config object
+    this.sankeyChartConfig = { ...this.sankeyChartConfig };
+    
     this.cdr.detectChanges();
   }
 
   // Method to generate random data
   generateRandomData(): void {
+    console.log('Generating random sankey data...');
     this.sankeyChartData = {
       nodes: [
         { id: 'A', name: 'Source A', color: '#3B82F6' },
@@ -206,6 +243,10 @@ export class SankeyChartDemoComponent implements OnInit {
         { source: 'C', target: 'Z', value: Math.floor(Math.random() * 100) + 50, color: '#F59E0B' }
       ]
     };
+    
+    // Force a complete re-render by creating a new data object
+    this.sankeyChartData = { ...this.sankeyChartData };
+    
     this.cdr.detectChanges();
   }
 
@@ -257,5 +298,53 @@ export class SankeyChartDemoComponent implements OnInit {
   // Get min flow value
   getMinFlow(): number {
     return Math.min(...this.sankeyChartData.links.map(link => link.value));
+  }
+
+  // Test method to verify all options work
+  testAllOptions() {
+    console.log('Testing all sankey chart options...');
+    
+    // Test data set changes
+    this.changeDataSet('budget');
+    setTimeout(() => {
+      this.changeDataSet('traffic');
+      setTimeout(() => {
+        this.changeDataSet('energy');
+      }, 1000);
+    }, 1000);
+    
+
+    
+    // Test dimension changes
+    setTimeout(() => {
+      this.updateWidth(700);
+      this.updateHeight(500);
+      setTimeout(() => {
+        this.updateWidth(500);
+        this.updateHeight(300);
+      }, 1000);
+    }, 6000);
+    
+    // Test chart options
+    setTimeout(() => {
+      this.toggleAnimation();
+      setTimeout(() => {
+        this.toggleShowValues();
+        setTimeout(() => {
+          this.toggleAnimation();
+          this.toggleShowValues();
+        }, 1000);
+      }, 1000);
+    }, 8000);
+    
+    // Test node and link styling
+    setTimeout(() => {
+      this.updateNodeWidth(25);
+      this.updateNodePadding(15);
+      setTimeout(() => {
+        this.updateNodeWidth(15);
+        this.updateNodePadding(10);
+      }, 1000);
+    }, 10000);
   }
 }

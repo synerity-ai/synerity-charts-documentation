@@ -147,8 +147,13 @@ export class PieChartDemoComponent implements OnInit {
 
   // Enhanced Customization Methods
   updateWidth(value: number) {
+    console.log('Updating width to:', value);
     this.customizationOptions.width = value;
     this.pieChartConfig.width = value;
+    
+    // Force a complete re-render by creating a new config object
+    this.pieChartConfig = { ...this.pieChartConfig };
+    
     this.cdr.detectChanges();
   }
 
@@ -188,24 +193,48 @@ export class PieChartDemoComponent implements OnInit {
   }
 
   changeColorScheme(scheme: string) {
+    console.log('Changing color scheme to:', scheme);
     this.customizationOptions.colorScheme = scheme;
     this.updateChartData();
     this.updateCurrentChartData();
+    
+    // Force a complete re-render by creating a new config object
+    this.pieChartConfig = { ...this.pieChartConfig };
+    
     this.cdr.detectChanges();
   }
 
   changeDataSet(dataSet: string) {
+    console.log('Changing data set to:', dataSet);
     this.currentDataSet = dataSet;
     this.updateChartData();
     this.updateCurrentChartData();
+    
+    // Force a complete re-render by creating a new config object
+    this.pieChartConfig = { ...this.pieChartConfig };
+    
     this.cdr.detectChanges();
   }
 
   // New Enhanced Methods
   setVariant(variant: string) {
+    console.log('Setting variant to:', variant);
     if (variant === 'pie' || variant === 'donut') {
       this.customizationOptions.variant = variant as 'pie' | 'donut';
       this.pieChartConfig.variant = variant as 'pie' | 'donut';
+      
+      // Adjust inner radius for donut chart
+      if (variant === 'donut' && this.pieChartConfig.innerRadius === 0) {
+        this.pieChartConfig.innerRadius = 50;
+        this.customizationOptions.innerRadius = 50;
+      } else if (variant === 'pie') {
+        this.pieChartConfig.innerRadius = 0;
+        this.customizationOptions.innerRadius = 0;
+      }
+      
+      // Force a complete re-render by creating a new config object
+      this.pieChartConfig = { ...this.pieChartConfig };
+      
       this.cdr.detectChanges();
     }
   }
@@ -316,6 +345,7 @@ export class PieChartDemoComponent implements OnInit {
 
   // Random Data Generation
   generateRandomData() {
+    console.log('Generating random data...');
     const dataPoints = Math.floor(Math.random() * 6) + 3; // 3-8 data points
     const colorScheme = this.colorSchemes[this.customizationOptions.colorScheme as keyof typeof this.colorSchemes];
     
@@ -326,10 +356,12 @@ export class PieChartDemoComponent implements OnInit {
     }));
     
     this.updateCurrentChartData();
+    
+    // Force a complete re-render by creating a new config object
+    this.pieChartConfig = { ...this.pieChartConfig };
+    
     this.cdr.detectChanges();
   }
-
-
 
   // Export Methods
   async exportChart(format: 'png' | 'svg') {
@@ -386,5 +418,76 @@ export class PieChartDemoComponent implements OnInit {
 
   getMinValue(): number {
     return Math.min(...this.currentChartData.map(item => item.value));
+  }
+
+  // Test method to verify all options work
+  testAllOptions() {
+    console.log('Testing all pie chart options...');
+    
+    // Test data set changes
+    this.changeDataSet('browsers');
+    setTimeout(() => {
+      this.changeDataSet('regions');
+      setTimeout(() => {
+        this.changeDataSet('devices');
+      }, 1000);
+    }, 1000);
+    
+    // Test chart variant changes
+    setTimeout(() => {
+      this.setVariant('donut');
+      setTimeout(() => {
+        this.setVariant('pie');
+      }, 1000);
+    }, 3000);
+    
+    // Test color scheme changes
+    setTimeout(() => {
+      this.changeColorScheme('warm');
+      setTimeout(() => {
+        this.changeColorScheme('cool');
+        setTimeout(() => {
+          this.changeColorScheme('default');
+        }, 1000);
+      }, 1000);
+    }, 5000);
+    
+    // Test dimension changes
+    setTimeout(() => {
+      this.updateWidth(700);
+      this.updateHeight(500);
+      setTimeout(() => {
+        this.updateWidth(500);
+        this.updateHeight(300);
+      }, 1000);
+    }, 7000);
+    
+    // Test chart options
+    setTimeout(() => {
+      this.toggleAnimation();
+      setTimeout(() => {
+        this.toggleShowLabels();
+        setTimeout(() => {
+          this.toggleShowValues();
+          setTimeout(() => {
+            this.toggleAnimation();
+            this.toggleShowLabels();
+            this.toggleShowValues();
+          }, 1000);
+        }, 1000);
+      }, 1000);
+    }, 9000);
+    
+    // Test legend options
+    setTimeout(() => {
+      this.toggleLegendShowValues();
+      setTimeout(() => {
+        this.toggleLegendShowPercentages();
+        setTimeout(() => {
+          this.toggleLegendShowValues();
+          this.toggleLegendShowPercentages();
+        }, 1000);
+      }, 1000);
+    }, 11000);
   }
 }

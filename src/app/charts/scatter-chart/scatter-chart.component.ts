@@ -98,12 +98,11 @@ export class ScatterChartComponent implements OnInit, OnDestroy, AfterViewInit, 
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    // Re-initialize chart when config changes
-    if (changes['config'] && !changes['config'].firstChange && this.chartContainer) {
-      setTimeout(() => {
-        this.initializeChart();
-        this.cdr.detectChanges();
-      }, 100);
+    // Update chart when config changes
+    if (changes['config'] && !changes['config'].firstChange && this.chart) {
+      console.log('Config changed, updating chart:', this.config);
+      console.log('Changes detected:', Object.keys(changes['config'].currentValue));
+      this.updateChart();
     }
   }
 
@@ -216,17 +215,49 @@ export class ScatterChartComponent implements OnInit, OnDestroy, AfterViewInit, 
   }
 
   public updateData(newData: ScatterData[]) {
+    console.log('Scatter chart component updateData called with:', newData);
     if (this.chart) {
+      console.log('Updating scatter chart with new data');
       this.config.data = [...newData];
       this.chart.update(newData);
       this.dataUpdate.emit(newData);
+    } else {
+      console.warn('Scatter chart not available for update');
     }
   }
 
-  public refreshChart() {
-    this.initAttempts = 0; // Reset attempts on manual refresh
-    this.waitForContainer();
+  private updateChart() {
+    if (this.chart) {
+      try {
+        console.log('Updating scatter chart with new config:', this.config);
+        console.log('Config data:', this.config.data);
+        
+        // Update chart data
+        if (this.config.data && this.config.data.length > 0) {
+          console.log('Updating chart with new data');
+          this.chart.update(this.config.data);
+        }
+        
+        // Update chart options using available methods
+        if (this.config.width && this.config.height) {
+          this.chart.resize(this.config.width, this.config.height);
+        }
+        
+        // Update trend line
+        if (this.config.showTrendLine !== undefined) {
+          this.chart.enableTrendLine(this.config.showTrendLine);
+        }
+        
+        this.cdr.detectChanges();
+      } catch (error) {
+        console.error('Error updating scatter chart:', error);
+      }
+    } else {
+      console.warn('Chart not available for update');
+    }
   }
+
+
 
   private destroyChart() {
     if (this.chart) {
@@ -308,7 +339,7 @@ export class ScatterChartComponent implements OnInit, OnDestroy, AfterViewInit, 
   private onResize(): void {
     if (this.chart) {
       setTimeout(() => {
-        this.refreshChart();
+        this.waitForContainer();
       }, 100);
     }
   }

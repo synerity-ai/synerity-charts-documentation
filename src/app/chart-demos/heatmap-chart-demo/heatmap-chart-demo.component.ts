@@ -43,7 +43,7 @@ export class HeatmapChartDemoComponent implements OnInit {
     showAxis: true
   };
 
-  // Sample data sets
+  // Sample data sets with better variation for color scales
   sampleDataSets = {
     sales: [
       { x: 'Q1', y: 'Product A', value: 10, color: '#3B82F6' },
@@ -66,6 +66,17 @@ export class HeatmapChartDemoComponent implements OnInit {
       { x: 'Mar', y: 'Team A', value: 90, color: '#84CC16' },
       { x: 'Mar', y: 'Team B', value: 97, color: '#F97316' },
       { x: 'Mar', y: 'Team C', value: 85, color: '#EC4899' }
+    ],
+    temperature: [
+      { x: 'Morning', y: 'Mon', value: 15, color: '#3B82F6' },
+      { x: 'Morning', y: 'Tue', value: 12, color: '#10B981' },
+      { x: 'Morning', y: 'Wed', value: 18, color: '#F59E0B' },
+      { x: 'Afternoon', y: 'Mon', value: 25, color: '#EF4444' },
+      { x: 'Afternoon', y: 'Tue', value: 22, color: '#8B5CF6' },
+      { x: 'Afternoon', y: 'Wed', value: 28, color: '#06B6D4' },
+      { x: 'Evening', y: 'Mon', value: 20, color: '#84CC16' },
+      { x: 'Evening', y: 'Tue', value: 18, color: '#F97316' },
+      { x: 'Evening', y: 'Wed', value: 23, color: '#EC4899' }
     ]
   };
 
@@ -85,6 +96,7 @@ export class HeatmapChartDemoComponent implements OnInit {
       ...item,
       value: Math.floor(Math.random() * 50) + 1
     }));
+    this.cdr.detectChanges();
   }
 
 
@@ -131,11 +143,16 @@ export class HeatmapChartDemoComponent implements OnInit {
 
   // Method to update width
   updateWidth(value: number): void {
+    console.log('Updating width to:', value);
     this.customizationOptions.width = value;
     this.heatmapChartConfig = {
       ...this.heatmapChartConfig,
       width: value
     };
+    
+    // Force a complete re-render by creating a new config object
+    this.heatmapChartConfig = { ...this.heatmapChartConfig };
+    
     this.cdr.detectChanges();
   }
 
@@ -161,8 +178,16 @@ export class HeatmapChartDemoComponent implements OnInit {
 
   // Method to change data set
   changeDataSet(dataSet: string): void {
+    console.log('Changing data set to:', dataSet);
     this.currentDataSet = dataSet;
-    this.updateChartData();
+    
+    // Load the selected data set
+    const selectedData = this.sampleDataSets[dataSet as keyof typeof this.sampleDataSets];
+    this.heatmapChartData = [...selectedData];
+    
+    // Force a complete re-render by creating a new config object
+    this.heatmapChartConfig = { ...this.heatmapChartConfig };
+    
     this.cdr.detectChanges();
   }
 
@@ -224,5 +249,64 @@ export class HeatmapChartDemoComponent implements OnInit {
   // Get total value from data
   getTotalValue(): number {
     return this.heatmapChartData.reduce((acc, item) => acc + item.value, 0);
+  }
+
+  // Test method to verify all options work
+  testAllOptions() {
+    console.log('Testing all heatmap chart options...');
+    
+    // Test data set changes
+    this.changeDataSet('performance');
+    setTimeout(() => {
+      this.changeDataSet('temperature');
+      setTimeout(() => {
+        this.changeDataSet('sales');
+      }, 1000);
+    }, 1000);
+    
+    // Test color scale changes
+    setTimeout(() => {
+      this.changeColorScale('diverging');
+      setTimeout(() => {
+        this.changeColorScale('categorical');
+        setTimeout(() => {
+          this.changeColorScale('sequential');
+        }, 1000);
+      }, 1000);
+    }, 3000);
+    
+    // Test dimension changes
+    setTimeout(() => {
+      this.updateWidth(700);
+      this.updateHeight(500);
+      setTimeout(() => {
+        this.updateWidth(500);
+        this.updateHeight(300);
+      }, 1000);
+    }, 6000);
+    
+    // Test chart options
+    setTimeout(() => {
+      this.toggleAnimation();
+      setTimeout(() => {
+        this.toggleShowValues();
+        setTimeout(() => {
+          this.toggleShowAxis();
+          setTimeout(() => {
+            this.toggleAnimation();
+            this.toggleShowValues();
+            this.toggleShowAxis();
+          }, 1000);
+        }, 1000);
+      }, 1000);
+    }, 8000);
+    
+    // Test cell padding
+    setTimeout(() => {
+      this.updateCellPadding(5);
+      setTimeout(() => {
+        this.updateCellPadding(2);
+      }, 1000);
+    }, 11000);
   }
 }

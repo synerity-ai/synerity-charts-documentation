@@ -24,16 +24,16 @@ export class GaugeChartComponent implements OnInit, OnDestroy, AfterViewInit, On
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.isInitialized && this.chart) {
-      if (changes['data'] && !changes['data'].firstChange) {
-        // Update the chart with new data
-        this.chart.update(this.data);
-      }
+    if (this.chart && (changes['data'] || changes['options'])) {
+      console.log('Config changed, updating gauge chart:', { data: this.data, options: this.options });
+      console.log('Changes detected:', Object.keys(changes));
       
-      if (changes['options'] && !changes['options'].firstChange) {
-        // Reinitialize chart with new options
-        this.destroyChart();
-        setTimeout(() => this.initChart(), 100);
+      // If type changed, we need to reinitialize the chart
+      if (changes['options'] && changes['options'].currentValue?.type !== changes['options'].previousValue?.type) {
+        console.log('Gauge type changed, reinitializing chart');
+        this.initChart();
+      } else {
+        this.updateChartInternal();
       }
     }
   }
@@ -91,6 +91,28 @@ export class GaugeChartComponent implements OnInit, OnDestroy, AfterViewInit, On
   public updateChart(newData: GaugeData): void {
     if (this.chart) {
       this.chart.update(newData);
+    }
+  }
+
+  private updateChartInternal(): void {
+    if (this.chart) {
+      try {
+        console.log('Updating gauge chart with new data/options:', { data: this.data, options: this.options });
+        
+        // Update chart data
+        this.chart.update(this.data);
+        
+        // Update chart options using available methods
+        if (this.chartContainer?.nativeElement) {
+          const width = this.chartContainer.nativeElement.offsetWidth;
+          const height = this.chartContainer.nativeElement.offsetHeight;
+          if (width && height) {
+            this.chart.resize(width, height);
+          }
+        }
+      } catch (error) {
+        console.error('Error updating gauge chart:', error);
+      }
     }
   }
 
