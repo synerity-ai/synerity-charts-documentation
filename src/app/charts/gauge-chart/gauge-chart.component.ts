@@ -51,12 +51,16 @@ export class GaugeChartComponent implements OnInit, OnDestroy, AfterViewInit, On
     try {
       this.destroyChart(); // Clean up any existing chart
       
+      const containerWidth = this.chartContainer.nativeElement.offsetWidth || 400;
+      const containerHeight = this.chartContainer.nativeElement.offsetHeight || 400;
+      
       this.chart = new GaugeChart({
         container: this.chartContainer.nativeElement,
         data: this.data,
         options: {
-          width: this.chartContainer.nativeElement.offsetWidth || 300,
-          height: this.chartContainer.nativeElement.offsetHeight || 300,
+          width: containerWidth,
+          height: containerHeight,
+          margin: { top: 40, right: 40, bottom: 60, left: 40 },
           animate: true,
           type: 'radial',
           min: this.data.min,
